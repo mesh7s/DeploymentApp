@@ -92,69 +92,70 @@ namespace DeploymentApp
         {
             try
             {
-
                 btnDeploy.IsEnabled = false;
-                txtbLogs.Text = "";
-                await Logger.Log("-------------------------------------------------------------------------------------\nStarting...", false);
-                SwitchpbStatus();
-                if (string.IsNullOrWhiteSpace(txtFolderPath.Text))
-                {
-                    MessageBox.Show("Folder path is empty");
-                    SwitchpbStatus();
-                    return;
-                }
-                var opsCount = 0;
-                var seconds = 6;
-                if (!string.IsNullOrWhiteSpace(txtFolderPath2.Text))
-                {
-                    await RunScript(GetScript("172.16.18.147", "InternalCoreLocalApi", SiteOperation.Stop));
-                    await Logger.Log($"Starting in {seconds} seconds to ensure process is dead so files won't be locked.", true);
-                    await Util.Delay(seconds);
-                    if (cbBackup.IsChecked == true)
-                    {
-                        await Logger.Log("Creating backup", true);
-                        await CreateBackup(txtFolderPath2.Text);
-                    }
-                    await Logger.Log($"Starting deployment to: {txtFolderPath2.Text}", true);
-                    await HandleFilesAndFoldersAsync(txtFolderPath.Text, txtFolderPath2.Text, cbOverwrite.IsChecked);
-                    await Logger.Log($"Completed deployment to: {txtFolderPath2.Text}", true);
-                    await RunScript(GetScript("spappdev02", "InternalCoreLocalApi", SiteOperation.Start));
-                    opsCount++;
-                }
-                else
-                {
-                    await Logger.Log($"NO PATH FOUND FOR FIRST FOLDER", true);
-                }
+                var con = new Config.Binding();
+                txtbLogs.Text = con.Config.DefaultServerLocation;
+                //txtbLogs.Text = "";
+                //await Logger.Log("-------------------------------------------------------------------------------------\nStarting...", false);
+                //SwitchpbStatus();
+                //if (string.IsNullOrWhiteSpace(txtFolderPath.Text))
+                //{
+                //    MessageBox.Show("Folder path is empty");
+                //    SwitchpbStatus();
+                //    return;
+                //}
+                //var opsCount = 0;
+                //var seconds = 6;
+                //if (!string.IsNullOrWhiteSpace(txtFolderPath2.Text))
+                //{
+                //    await RunScript(GetScript("172.16.18.147", "InternalCoreLocalApi", SiteOperation.Stop));
+                //    await Logger.Log($"Starting in {seconds} seconds to ensure process is dead so files won't be locked.", true);
+                //    await Util.Delay(seconds);
+                //    if (cbBackup.IsChecked == true)
+                //    {
+                //        await Logger.Log("Creating backup", true);
+                //        await CreateBackup(txtFolderPath2.Text);
+                //    }
+                //    await Logger.Log($"Starting deployment to: {txtFolderPath2.Text}", true);
+                //    await HandleFilesAndFoldersAsync(txtFolderPath.Text, txtFolderPath2.Text, cbOverwrite.IsChecked);
+                //    await Logger.Log($"Completed deployment to: {txtFolderPath2.Text}", true);
+                //    await RunScript(GetScript("spappdev02", "InternalCoreLocalApi", SiteOperation.Start));
+                //    opsCount++;
+                //}
+                //else
+                //{
+                //    await Logger.Log($"NO PATH FOUND FOR FIRST FOLDER", true);
+                //}
 
-                if (!string.IsNullOrWhiteSpace(txtFolderPath3.Text))
-                {
-                    await RunScript(GetScript("spappdev02", "InternalCoreLocalApi", SiteOperation.Stop));
-                    await Logger.Log($"Starting in {seconds} seconds to ensure process is dead so files won't be locked.", true);
-                    await Util.Delay(seconds);
-                    if (cbBackup.IsChecked == true)
-                    {
-                        await Logger.Log("Creating backup", true);
-                        await CreateBackup(txtFolderPath3.Text);
-                    }
-                    await Logger.Log($"Starting deployment to: {txtFolderPath3.Text}", true);
-                    await HandleFilesAndFoldersAsync(txtFolderPath.Text, txtFolderPath3.Text, cbOverwrite.IsChecked);
-                    await Logger.Log($"Completed deployment to: {txtFolderPath3.Text}", true);
-                    await RunScript(GetScript("spappdev02", "InternalCoreLocalApi", SiteOperation.Start));
-                    opsCount++;
-                }
-                else
-                {
-                    await Logger.Log($"NO PATH FOUND FOR SECOND FOLDER", true);
-                }
-                SwitchpbStatus();
+                //if (!string.IsNullOrWhiteSpace(txtFolderPath3.Text))
+                //{
+                //    await RunScript(GetScript("spappdev02", "InternalCoreLocalApi", SiteOperation.Stop));
+                //    await Logger.Log($"Starting in {seconds} seconds to ensure process is dead so files won't be locked.", true);
+                //    await Util.Delay(seconds);
+                //    if (cbBackup.IsChecked == true)
+                //    {
+                //        await Logger.Log("Creating backup", true);
+                //        await CreateBackup(txtFolderPath3.Text);
+                //    }
+                //    await Logger.Log($"Starting deployment to: {txtFolderPath3.Text}", true);
+                //    await HandleFilesAndFoldersAsync(txtFolderPath.Text, txtFolderPath3.Text, cbOverwrite.IsChecked);
+                //    await Logger.Log($"Completed deployment to: {txtFolderPath3.Text}", true);
+                //    await RunScript(GetScript("spappdev02", "InternalCoreLocalApi", SiteOperation.Start));
+                //    opsCount++;
+                //}
+                //else
+                //{
+                //    await Logger.Log($"NO PATH FOUND FOR SECOND FOLDER", true);
+                //}
+                //SwitchpbStatus();
 
-                if (opsCount > 0)
-                {
-                    await Logger.Log("-------------------------------------------------------------------------------------\nDeployment Complete", false);
-                    MessageBox.Show("Deployment Complete", "Done", icon: MessageBoxImage.Information, button: MessageBoxButton.OK);
-                }
-                else
-                    await Logger.Log("-------------------------------------------------------------------------------------\nNO FOLDERS TO DEPLOY TO FOUND.", false);
+                //if (opsCount > 0)
+                //{
+                //    await Logger.Log("-------------------------------------------------------------------------------------\nDeployment Complete", false);
+                //    MessageBox.Show("Deployment Complete", "Done", icon: MessageBoxImage.Information, button: MessageBoxButton.OK);
+                //}
+                //else
+                //    await Logger.Log("-------------------------------------------------------------------------------------\nNO FOLDERS TO DEPLOY TO FOUND.", false);
                 btnDeploy.IsEnabled = true;
             }
             catch (Exception ex)
