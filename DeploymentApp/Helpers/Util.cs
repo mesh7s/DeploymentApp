@@ -1,6 +1,8 @@
 ﻿using DeploymentApp.Logs;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace DeploymentApp.Helpers
 {
@@ -36,6 +38,13 @@ namespace DeploymentApp.Helpers
                 sb.Append(c);
             }
             return sb.ToString();
+        }
+
+        public static void BindComboBox<T>(ComboBox ddl, ObservableCollection<T> source,string text, string value)
+        {
+            ddl.ItemsSource = source;
+            ddl.DisplayMemberPath = text;
+            ddl.SelectedValuePath = value;
         }
     }
 }

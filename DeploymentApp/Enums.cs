@@ -13,5 +13,11 @@ namespace DeploymentApp
             Start,
             Stop
         }
+
+        public enum ManageProcess
+        {
+            Add,
+            Update
+        }
     }
 }

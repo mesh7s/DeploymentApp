@@ -1,0 +1,36 @@
+﻿<Window x:Class="DeploymentApp.Dialogs.WebAppsDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DeploymentApp.Dialogs"
+        mc:Ignorable="d"
+        Title="Manage Web Apps" Height="393" Width="384"
+        ResizeMode="CanMinimize">
+    <Grid>
+        <ScrollViewer Margin="0,0,0,87">
+            <ItemsControl Margin="0,0,0,10" x:Name="icApps">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <DockPanel>
+                            <Label Content="{Binding Name}"   HorizontalAlignment="left"></Label>
+                            <DockPanel HorizontalAlignment="Right">
+                                <Button x:Name="btnEditWebApp" Background="Transparent" Foreground="Red" Tag="{Binding Id}" Click="btnEditWebApp_Click"  HorizontalAlignment="Right">
+                                    <DockPanel>
+                                        <Image Source="D:/dev/DeploymentApp/DeploymentApp/Images/icons8-job-48.png" Height="30" Width="30" HorizontalAlignment="Right" />
+                                    </DockPanel>
+                                </Button>
+                                <Button x:Name="btnDeleteWebApp" Background="Transparent" Foreground="Red" Tag="{Binding Id}" Click="btnDeleteWebApp_Click"  HorizontalAlignment="Right">
+                                    <DockPanel>
+                                        <Image Source="D:/dev/DeploymentApp/DeploymentApp/Images/icons8-delete-bin-48.png" Height="30" Width="30" HorizontalAlignment="Right" />
+                                    </DockPanel>
+                                </Button>
+                            </DockPanel>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        <Button x:Name="btnAddWebApp" Content="Add Application" Margin="80,311,80,22" Click="btnAddWebApp_Click"/>
+    </Grid>
+</Window>

@@ -1,9 +1,14 @@
-﻿using DeploymentApp.Helpers;
+﻿using DeploymentApp.Configuration;
+using DeploymentApp.Dialogs;
+using DeploymentApp.Helpers;
 using DeploymentApp.Logs;
+using DeploymentApp.Models;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Web.Administration;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.DirectoryServices;
 using System.IO;
 using System.Management.Automation;
@@ -23,9 +28,13 @@ namespace DeploymentApp
     public partial class MainWindow : Window
     {
         public static TextBlock LogsTextBlock;
+        public static Configuration.Binding _config;
+        public ServerProfile SelectedServerProfile { get; set; }
         public MainWindow()
         {
             InitializeComponent();
+            _config = new Configuration.Binding();
+            Util.BindComboBox(ddlServerProfiles, _config.Config.ServerProfiles, "ProfileName", "Id");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -75,7 +84,7 @@ namespace DeploymentApp
             // print the resulting pipeline objects to the console.
             foreach (var item in pipelineObjects)
             {
-                txtbLogs.Text += item.BaseObject.ToString() + "\n";
+                await Logger.Log(item.BaseObject.ToString(), true);
             }
         }
 
@@ -93,8 +102,7 @@ namespace DeploymentApp
             try
             {
                 btnDeploy.IsEnabled = false;
-                var con = new Config.Binding();
-                txtbLogs.Text = con.Config.DefaultServerLocation;
+                txtbLogs.Text = _config.Config.DefaultServerLocation;
                 //txtbLogs.Text = "";
                 //await Logger.Log("-------------------------------------------------------------------------------------\nStarting...", false);
                 //SwitchpbStatus();
@@ -220,9 +228,75 @@ namespace DeploymentApp
             await AsyncIO.DirectoryCopyAsync(folderToDeployToPath, backupDir.FullName, true);
         }
 
-        void SwitchpbStatus()
+        void SwitchPbStatus()
         {
             pbStatus.IsIndeterminate = !pbStatus.IsIndeterminate;
+        }
+
+        void SwitchAppsControls(bool trigger)
+        {
+            ddlApplications.IsEnabled = trigger;
+            btnEditWebApps.IsEnabled = trigger;
+        }
+
+        private void btnEditServerProfiles_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new ServerProfilesDialog();
+            dialog.ShowDialog();
+            if (dialog.ChangedServer != null)
+            {
+                if (dialog.ChangedServer.Id == SelectedServerProfile.Id)
+                {
+                    txtServerName1.Text = dialog.ChangedServer.FirstServerName;
+                    txtServerName2.Text = dialog.ChangedServer.SecondServerName;
+                }
+            }
+        }
+
+        private void btnEditWebApps_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new WebAppsDialog(SelectedServerProfile.Id);
+            dialog.ShowDialog();
+            if (dialog.ChangedWebApp != null)
+            {
+                if (dialog.ChangedWebApp.Id == ((WebApp)ddlApplications.SelectedItem).Id)
+                {
+                    txtFolderPath2.Text = dialog.ChangedWebApp.FolderName;
+                    txtFolderPath3.Text = dialog.ChangedWebApp.FolderName;
+                }
+            }
+        }
+
+        private void ddlServerProfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ddlServerProfiles.SelectedItem == null) return;
+            ClearFields();
+            var selectedItem = ((ServerProfile)ddlServerProfiles.SelectedItem);
+            SelectedServerProfile = selectedItem;
+            txtServerName1.Text = selectedItem.FirstServerName;
+            txtServerName2.Text = selectedItem.SecondServerName;
+            Util.BindComboBox(ddlApplications, selectedItem.Applications, "Name", "FolderName");
+            if (selectedItem.Applications != null)
+                SwitchAppsControls(true);
+            else
+                SwitchAppsControls(false);
+        }
+
+        private void ddlApplications_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ddlApplications.SelectedItem == null) return;
+            var selectedItem = ((WebApp)ddlApplications.SelectedItem);
+            txtFolderPath2.Text = selectedItem.FolderName;
+            txtFolderPath3.Text = selectedItem.FolderName;
+        }
+
+        private void ClearFields()
+        {
+            txtFolderPath.Text = string.Empty;
+            txtFolderPath2.Text = string.Empty;
+            txtFolderPath3.Text = string.Empty;
+            txtServerName1.Text = string.Empty;
+            txtServerName2.Text = string.Empty;
         }
     }
 }
