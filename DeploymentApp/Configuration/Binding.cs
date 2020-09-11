@@ -15,11 +15,23 @@ namespace DeploymentApp.Configuration
     {
         
         public Config Config;
-        private readonly string _appsettingsFile = Path.Combine(@"D:\dev\DeploymentApp\DeploymentApp\Configuration", "appsettings.json");
+        private readonly string _appsettingsFilePath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
         public Binding()
-        {            
-            var json = File.ReadAllText(_appsettingsFile);
+        {
+            if (!File.Exists(_appsettingsFilePath)) CreateSettingsFile();
+            var json = File.ReadAllText(_appsettingsFilePath);
             Config = JsonConvert.DeserializeObject<Config>(json);
+        }
+
+        private void CreateSettingsFile()
+        {
+            var file = File.Create(_appsettingsFilePath);
+            file.Close(); // closing file to be able to write text to it.
+            File.WriteAllText(file.Name, JsonConvert.SerializeObject(new Config
+            {
+                DefaultServerLocation = "\\c$\\inetpub\\wwwroot\\",
+                ServerProfiles = new ObservableCollection<ServerProfile>()
+            }, Formatting.Indented));
         }
 
         public ObservableCollection<ServerProfile> GetServerProfiles()
@@ -83,6 +95,6 @@ namespace DeploymentApp.Configuration
         }
 
         private void SaveChanges() =>
-            File.WriteAllText(_appsettingsFile, JsonConvert.SerializeObject(Config, Formatting.Indented));
+            File.WriteAllText(_appsettingsFilePath, JsonConvert.SerializeObject(Config, Formatting.Indented));
     }
 }

@@ -5,11 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeploymentApp.Dialogs"
         mc:Ignorable="d"
-        Title="Add Web App" SizeToContent="WidthAndHeight" d:DesignWidth="306.002" Height="216"
-        ResizeMode="CanMinimize">
+        Title="Add Web App" SizeToContent="WidthAndHeight" Height="185"
+        ResizeMode="CanMinimize" Width="310">
     <Grid Margin="15,15,15,4">
-        <TextBox ToolTip="Enter a name for the web app"  Height="22" Margin="68,36,65,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtWebAppName"/>
-        <TextBlock IsHitTestVisible="False" Text="Web App Name" VerticalAlignment="Top" Margin="94,39,66,0" Foreground="DarkGray">
+        <TextBox ToolTip="Enter a name for the web app"  Height="22" Margin="68,1,65,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtWebAppName"/>
+        <TextBlock IsHitTestVisible="False" Text="Web App Name" VerticalAlignment="Top" Margin="94,4,66,0" Foreground="DarkGray">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -21,8 +21,8 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBox ToolTip="Enter folder name"  Height="22" Margin="67,72,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtFolderName"/>
-        <TextBlock IsHitTestVisible="False" Text="Folder Name" VerticalAlignment="Top" Margin="106,75,49,0" Foreground="DarkGray">
+        <TextBox ToolTip="Enter folder name"  Height="22" Margin="67,37,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtFolderName"/>
+        <TextBlock IsHitTestVisible="False" Text="Folder Name" VerticalAlignment="Top" Margin="106,40,49,0" Foreground="DarkGray">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -34,8 +34,8 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <Button Background="Red" Content="Cancel" x:Name="btnCancel" HorizontalAlignment="Center" Margin="0,140,0,0" VerticalAlignment="Top" Width="144" Click="btnCancel_Click" Height="24"/>
-        <Button Content="Save" x:Name="btnSave" HorizontalAlignment="Center" Margin="0,110,0,0" VerticalAlignment="Top" Width="144" Click="btnSave_Click" Height="25"/>
+        <Button Background="Red" Content="Cancel" x:Name="btnCancel" HorizontalAlignment="Center" Margin="0,105,0,0" VerticalAlignment="Top" Width="144" Click="btnCancel_Click" Height="24"/>
+        <Button Content="Save" x:Name="btnSave" HorizontalAlignment="Center" Margin="0,75,0,0" VerticalAlignment="Top" Width="144" Click="btnSave_Click" Height="25"/>
     </Grid>
 </Window>
 
