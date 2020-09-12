@@ -28,7 +28,7 @@ namespace DeploymentApp.Dialogs
         public AddWebAppDialog(ManageProcess process, Guid serverId = new Guid(), WebApp webAppForUpdate = null)
         {
             InitializeComponent();
-            _config = MainWindow._config;
+            _config = MainWindow.Config;
             _process = process;
             _webAppForUpdate = webAppForUpdate;
             _serverId = serverId;

@@ -1,5 +1,6 @@
 ﻿using DeploymentApp.Logs;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -45,6 +46,13 @@ namespace DeploymentApp.Helpers
             ddl.ItemsSource = source;
             ddl.DisplayMemberPath = text;
             ddl.SelectedValuePath = value;
+        }
+
+        public static string PrepareDeployToPath(string serverName, string location, string folderName)
+        {
+            if (serverName.ToLower() == "c:")
+                return Path.Combine(serverName, location.ToLower().Replace("c$\\", string.Empty), folderName);
+            return Path.Combine($"\\\\{serverName}", location, folderName);
         }
     }
 }

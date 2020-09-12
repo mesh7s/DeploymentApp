@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace DeploymentApp.Helpers
 {
@@ -18,6 +19,62 @@ namespace DeploymentApp.Helpers
         public static Task CopyFileAsync(string sourceFileName, string destFileName, bool overwrite = false)
         {
             return Task.Run(() => File.Copy(sourceFileName, destFileName, overwrite));
+        }
+
+        public static async Task HandleFilesAndFoldersAsync(string folderToDeployPath, string folderToDeployToPath, bool? overwriteSettings)
+        {
+            if (!Directory.Exists(folderToDeployPath))
+                Directory.CreateDirectory(folderToDeployPath);
+            var folderToDeployTo = new DirectoryInfo(folderToDeployToPath);
+
+            await DeleteFilesAndFoldersAsync(folderToDeployTo, overwriteSettings);
+            await DirectoryCopyAsync(folderToDeployPath, folderToDeployToPath, true);
+            if (overwriteSettings == true)
+            {
+                var appSettingsFileName = "appsettings.json";
+                var appSettingsDevFileName = "appsettings.Development.json";
+                var tempFolder = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+                var appSettingsFile = Path.Combine(folderToDeployTo.FullName, appSettingsFileName);
+                var appSettingsDevFile = Path.Combine(folderToDeployTo.FullName, appSettingsDevFileName);
+                await CopyFileAsync(tempFolder, appSettingsFile, true);
+                await CopyFileAsync(tempFolder, appSettingsDevFile, true);
+                var tempDir = new DirectoryInfo(tempFolder);
+                await tempDir.DeleteAsync(true);
+            }
+        }
+
+        public static async Task CreateBackup(string folderToDeployToPath, string folderToDeployToName)
+        {
+            string backupPath;
+            if (folderToDeployToPath.StartsWith("\\\\"))
+            {
+                var serverCFolder = folderToDeployToPath.ToLower().Split("c$")[0] + "\\c$";
+                backupPath = Path.Combine(serverCFolder, "DeploymentAppWebsitesBackup");
+            }
+            else
+                backupPath = Path.Combine("C:\\", "DeploymentAppWebsitesBackup");
+
+            string fullBackupPath = Path.Combine(backupPath, folderToDeployToName);
+
+            var backupDir = Directory.CreateDirectory(fullBackupPath);
+            var backupDirFiles = await backupDir.GetFilesAsync();
+            if (backupDirFiles.Length > 0)
+            {
+                var result = MessageBox.Show($"Backup folder already exists for {folderToDeployToName} in {backupPath}, do you want to replace it?", "Warning", MessageBoxButton.YesNoCancel);
+                switch (result)
+                {
+                    case MessageBoxResult.Cancel:
+                        throw new Exception("Operation Canceled");
+                    case MessageBoxResult.Yes:
+                        await DeleteFilesAndFoldersAsync(backupDir, true);
+                        break;
+                    case MessageBoxResult.No:
+                        return;
+                    default:
+                        throw new Exception("Operation Canceled");
+                }
+            }
+            await DirectoryCopyAsync(folderToDeployToPath, backupDir.FullName, true);
         }
 
         public static async Task DeleteFilesAndFoldersAsync(DirectoryInfo folderToDeployTo, bool? overwriteSettings = false)

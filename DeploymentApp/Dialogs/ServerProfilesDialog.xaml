@@ -17,12 +17,12 @@
                             <DockPanel HorizontalAlignment="Right">
                                 <Button x:Name="btnEditServerProfile" Background="Transparent" Foreground="Red" Tag="{Binding Id}" Click="btnEditServerProfile_Click"  HorizontalAlignment="Right">
                                     <DockPanel>
-                                        <Image Source="D:/dev/DeploymentApp/DeploymentApp/Images/icons8-job-48.png" Height="30" Width="30" HorizontalAlignment="Right" />
+                                        <Image Source="{StaticResource JobIcon}" Height="30" Width="30" HorizontalAlignment="Right" />
                                     </DockPanel>
                                 </Button>
                                 <Button x:Name="btnDeleteServerProfile" Background="Transparent" Foreground="Red" Tag="{Binding Id}" Click="btnDeleteServerProfile_Click"  HorizontalAlignment="Right">
                                     <DockPanel>
-                                        <Image Source="D:/dev/DeploymentApp/DeploymentApp/Images/icons8-delete-bin-48.png" Height="30" Width="30" HorizontalAlignment="Right" />
+                                        <Image Source="{StaticResource TrashCanIcon}" Height="30" Width="30" HorizontalAlignment="Right" />
                                     </DockPanel>
                                 </Button>
                             </DockPanel>

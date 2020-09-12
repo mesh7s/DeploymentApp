@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DeploymentApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="611" Width="1115"
+        Title="MainWindow" Height="611" Width="1163"
         Loaded="Window_Loaded"
         ResizeMode="CanMinimize">
     <Grid>
@@ -15,7 +15,7 @@
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Visibility" Value="Collapsed"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Text, ElementName=txtFolderPath2}" Value="">
+                        <DataTrigger Binding="{Binding Text, ElementName=txtFolderPath}" Value="">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
                     </Style.Triggers>
@@ -25,13 +25,13 @@
         <Button x:Name="btnBrowse" Content="Browse" HorizontalAlignment="Left"   
                 Margin="448,218,0,0" VerticalAlignment="Top" Width="120" 
                 RenderTransformOrigin="1.047,0.821" Height="22" Click="btnBrowse_Click"/>
-        <TextBox ToolTip="Enter a folder located in inetpub\wwwroot" HorizontalAlignment="Left" Height="22" Margin="206,267,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="218" x:Name="txtFolderPath2"/>
-        <TextBlock IsHitTestVisible="False" Text="FOLDER TO DEPLOY TO" VerticalAlignment="Top" Margin="222,270,657,0" Foreground="DarkGray">
+        <TextBox ToolTip="Enter a folder located in inetpub\wwwroot" HorizontalAlignment="Left" Height="22" Margin="206,282,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="218" x:Name="txtFolderName1"/>
+        <TextBlock IsHitTestVisible="False" Text="FOLDER TO DEPLOY TO" VerticalAlignment="Top" Margin="222,285,796,0" Foreground="DarkGray" Height="28">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Visibility" Value="Collapsed"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Text, ElementName=txtFolderPath2}" Value="">
+                        <DataTrigger Binding="{Binding Text, ElementName=txtFolderName1}" Value="">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
                     </Style.Triggers>
@@ -39,23 +39,23 @@
             </TextBlock.Style>
         </TextBlock>
         <Button x:Name="btnBrowse2" Content="Browse" HorizontalAlignment="Left"   
-            Margin="448,267,0,0" VerticalAlignment="Top" Width="120" 
+            Margin="448,282,0,0" VerticalAlignment="Top" Width="120" 
             RenderTransformOrigin="1.047,0.821" Height="22" Click="btnBrowse2_Click"/>
-        <TextBox ToolTip="Enter a folder located in inetpub\wwwroot" HorizontalAlignment="Left" Height="22" Margin="206,312,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="218" x:Name="txtFolderPath3"/>
-        <TextBlock IsHitTestVisible="False" Text="FOLDER TO DEPLOY TO" VerticalAlignment="Top" Margin="222,315,657,0" Foreground="DarkGray">
+        <TextBox ToolTip="Enter a folder located in inetpub\wwwroot" HorizontalAlignment="Left" Height="22" Margin="206,349,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="218" x:Name="txtFolderName2"/>
+        <TextBlock IsHitTestVisible="False" Text="FOLDER TO DEPLOY TO" VerticalAlignment="Top" Margin="222,352,796,0" Foreground="DarkGray" Height="34">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Visibility" Value="Collapsed"/>
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Text, ElementName=txtFolderPath3}" Value="">
+                        <DataTrigger Binding="{Binding Text, ElementName=txtFolderName2}" Value="">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBox ToolTip="Enter server name (NOT IP)" HorizontalAlignment="Left" Height="22" Margin="24,267,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" x:Name="txtServerName1"/>
-        <TextBlock IsHitTestVisible="False" Text="Server Name" VerticalAlignment="Top" Margin="38,270,893,0" Foreground="DarkGray">
+        <TextBox ToolTip="Enter server name (NOT IP)" HorizontalAlignment="Left" Height="22" Margin="24,282,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" x:Name="txtServerName1"/>
+        <TextBlock IsHitTestVisible="False" Text="Server Name" VerticalAlignment="Top" Margin="38,285,1040,0" Foreground="DarkGray" Height="28">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -67,8 +67,8 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBox ToolTip="Enter server name (NOT IP)" HorizontalAlignment="Left" Height="22" Margin="24,312,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" x:Name="txtServerName2"/>
-        <TextBlock IsHitTestVisible="False" Text="Server Name" VerticalAlignment="Top" Margin="38,315,893,0" Foreground="DarkGray">
+        <TextBox ToolTip="Enter server name (NOT IP)" HorizontalAlignment="Left" Height="22" Margin="24,349,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="142" x:Name="txtServerName2"/>
+        <TextBlock IsHitTestVisible="False" Text="Server Name" VerticalAlignment="Top" Margin="38,352,1040,0" Foreground="DarkGray" Height="34">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -81,13 +81,13 @@
             </TextBlock.Style>
         </TextBlock>
         <Button x:Name="btnBrowse3" Content="Browse" HorizontalAlignment="Left"   
-            Margin="448,312,0,0" VerticalAlignment="Top" Width="120" 
+            Margin="448,349,0,0" VerticalAlignment="Top" Width="120" 
             RenderTransformOrigin="1.047,0.821" Height="22" Click="btnBrowse3_Click"/>
         <Label x:Name="lblMessage" Content="Deploy .NET Core WebApi folder to specified folders." HorizontalAlignment="Left" Margin="14,10,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnDeploy" Content="DEPLOY" HorizontalAlignment="Left" Margin="427,419,0,0" VerticalAlignment="Top" Width="162" Height="47" Click="btnDeploy_Click"/>
-        <ProgressBar x:Name="pbStatus" HorizontalAlignment="Left" Height="19" Margin="14,433,0,0" VerticalAlignment="Top" Width="386" Minimum="0" Maximum="100" IsIndeterminate="False" />
-        <ScrollViewer Margin="644,64,10,34">
-            <TextBlock x:Name="txtbLogs" TextWrapping="Wrap"/>
+        <ProgressBar x:Name="pbStatus" HorizontalAlignment="Left" Height="19" Margin="14,433,0,0" VerticalAlignment="Top" Width="386" Minimum="0" Maximum="100" IsIndeterminate="False" Visibility="Hidden" />
+        <ScrollViewer Margin="644,136,10,34">
+            <TextBlock x:Name="txtbLogs" TextWrapping="Wrap" Height="396"/>
         </ScrollViewer>
         <CheckBox Content="Overwrite settings" HorizontalAlignment="Left" Margin="671,16,0,0" VerticalAlignment="Top" Height="18" Width="141" x:Name="cbOverwrite"/>
         <CheckBox Content="Create Backup" HorizontalAlignment="Left" Margin="851,17,0,0" VerticalAlignment="Top" x:Name="cbBackup" />
@@ -122,5 +122,10 @@
             </TextBlock.Style>
         </TextBlock>
         <Button x:Name="btnEditWebApps" Content="Manage Web Applications" HorizontalAlignment="Left" Margin="278,104,0,0" VerticalAlignment="Top" Width="178" Click="btnEditWebApps_Click" IsEnabled="False"/>
+        <Label Content="Current Deployment Location: " HorizontalAlignment="Left" Margin="671,57,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblDeploymentLocation" Content="None" HorizontalAlignment="Left" Margin="837,57,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnChangeDefaultLocation" Content="Change Default Location" HorizontalAlignment="Left" Margin="958,81,0,0" VerticalAlignment="Top" Width="147" Click="btnChangeDefaultLocation_Click"/>
+        <CheckBox x:Name="cbDeployToC" Content="Deploy to C: (ie: c:/inetpub/wwwroot/...)" HorizontalAlignment="Left" Margin="24,262,0,0" VerticalAlignment="Top" Checked="cbDeployToC_Checked" Unchecked="cbDeployToC_Unchecked"/>
+
     </Grid>
 </Window>

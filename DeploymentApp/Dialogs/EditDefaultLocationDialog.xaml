@@ -1,0 +1,14 @@
+﻿<Window x:Class="DeploymentApp.Dialogs.EditDefaultLocationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DeploymentApp.Dialogs"
+        mc:Ignorable="d"
+        Title="Update Default Server Location" Height="89" Width="441" ResizeMode="CanMinimize">
+    <Grid>
+        <TextBox x:Name="txtDefaultLocation" HorizontalAlignment="Left" Margin="10,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="237"/>
+        <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Margin="274,0,0,0" VerticalAlignment="Center" Height="34" Width="66" Click="btnSave_Click"/>
+        <Button x:Name="btnReset" Content="Reset" HorizontalAlignment="Left" Margin="345,0,0,0" VerticalAlignment="Center" Height="34" Width="66" Click="btnReset_Click"/>
+    </Grid>
+</Window>

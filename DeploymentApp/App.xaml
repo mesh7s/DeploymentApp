@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:DeploymentApp"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <BitmapImage x:Key="TrashCanIcon" UriSource="Images/icons8-delete-bin-48.png" />
+        <BitmapImage x:Key="JobIcon" UriSource="Images/icons8-job-48.png" />
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#373737" />
             <Setter Property="Foreground" Value="White" />
@@ -41,14 +43,12 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Color x:Key="detailMark">#FFA1A9B3</Color>
-        <SolidColorBrush x:Key="detailMarkBrush" Color="{StaticResource ResourceKey=detailMark}" />
         <Style x:Key="flatTextBox" TargetType="{x:Type TextBox}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
                         <Grid>
-                            <Rectangle  Stroke="{StaticResource ResourceKey=detailMarkBrush}" StrokeThickness="1"/>
+                            <Rectangle  Stroke="#FFA1A9B3" StrokeThickness="1"/>
                             <TextBox Margin="1" Text="{TemplateBinding Text}" BorderThickness="0"/>
                         </Grid>
                     </ControlTemplate>

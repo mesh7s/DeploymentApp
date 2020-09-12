@@ -1,4 +1,5 @@
 ﻿using DeploymentApp.Configuration;
+using DeploymentApp.Deployment;
 using DeploymentApp.Dialogs;
 using DeploymentApp.Helpers;
 using DeploymentApp.Logs;
@@ -28,13 +29,14 @@ namespace DeploymentApp
     public partial class MainWindow : Window
     {
         public static TextBlock LogsTextBlock;
-        public static Configuration.Binding _config;
+        public static Configuration.Binding Config;
         public ServerProfile SelectedServerProfile { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-            _config = new Configuration.Binding();
-            Util.BindComboBox(ddlServerProfiles, _config.Config.ServerProfiles, "ProfileName", "Id");
+            Config = new Configuration.Binding();
+            Util.BindComboBox(ddlServerProfiles, Config.Config.ServerProfiles, "ProfileName", "Id");
+            lblDeploymentLocation.Content = $@"\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -55,7 +57,7 @@ namespace DeploymentApp
             var dialog = new VistaFolderBrowserDialog();
             if (dialog.ShowDialog(this).GetValueOrDefault())
             {
-                txtFolderPath2.Text = dialog.SelectedPath;
+                txtFolderName1.Text = dialog.SelectedPath;
             }
         }
         private void btnBrowse3_Click(object sender, RoutedEventArgs e)
@@ -63,38 +65,8 @@ namespace DeploymentApp
             var dialog = new VistaFolderBrowserDialog();
             if (dialog.ShowDialog(this).GetValueOrDefault())
             {
-                txtFolderPath3.Text = dialog.SelectedPath;
+                txtFolderName2.Text = dialog.SelectedPath;
             }
-        }
-
-        public async Task RunScript(string scriptContents)
-        {
-            // create a new hosted PowerShell instance using the default runspace.
-            // wrap in a using statement to ensure resources are cleaned up.
-            using PowerShell ps = PowerShell.Create();
-            // specify the script code to run.
-            ps.AddScript(scriptContents);
-
-            // specify the parameters to pass into the script.
-            //ps.AddParameters(scriptParameters);
-
-            // execute the script and await the result.
-            var pipelineObjects = await ps.InvokeAsync().ConfigureAwait(false);
-
-            // print the resulting pipeline objects to the console.
-            foreach (var item in pipelineObjects)
-            {
-                await Logger.Log(item.BaseObject.ToString(), true);
-            }
-        }
-
-        string GetScript(string serverName, string siteName, SiteOperation siteOperation)
-        {
-            return @$"Invoke-Command -Computername ""{serverName}"" -Scriptblock {{
-                (Import-Module WebAdministration);
-                {siteOperation}-Website -Name ""{siteName}""
-                {siteOperation}-WebAppPool -Name ""{siteName}"";
-                }}";
         }
 
         private async void btnDeploy_Click(object sender, RoutedEventArgs e)
@@ -102,141 +74,63 @@ namespace DeploymentApp
             try
             {
                 btnDeploy.IsEnabled = false;
-                txtbLogs.Text = _config.Config.DefaultServerLocation;
-                //txtbLogs.Text = "";
-                //await Logger.Log("-------------------------------------------------------------------------------------\nStarting...", false);
-                //SwitchpbStatus();
-                //if (string.IsNullOrWhiteSpace(txtFolderPath.Text))
-                //{
-                //    MessageBox.Show("Folder path is empty");
-                //    SwitchpbStatus();
-                //    return;
-                //}
-                //var opsCount = 0;
-                //var seconds = 6;
-                //if (!string.IsNullOrWhiteSpace(txtFolderPath2.Text))
-                //{
-                //    await RunScript(GetScript("172.16.18.147", "InternalCoreLocalApi", SiteOperation.Stop));
-                //    await Logger.Log($"Starting in {seconds} seconds to ensure process is dead so files won't be locked.", true);
-                //    await Util.Delay(seconds);
-                //    if (cbBackup.IsChecked == true)
-                //    {
-                //        await Logger.Log("Creating backup", true);
-                //        await CreateBackup(txtFolderPath2.Text);
-                //    }
-                //    await Logger.Log($"Starting deployment to: {txtFolderPath2.Text}", true);
-                //    await HandleFilesAndFoldersAsync(txtFolderPath.Text, txtFolderPath2.Text, cbOverwrite.IsChecked);
-                //    await Logger.Log($"Completed deployment to: {txtFolderPath2.Text}", true);
-                //    await RunScript(GetScript("spappdev02", "InternalCoreLocalApi", SiteOperation.Start));
-                //    opsCount++;
-                //}
-                //else
-                //{
-                //    await Logger.Log($"NO PATH FOUND FOR FIRST FOLDER", true);
-                //}
-
-                //if (!string.IsNullOrWhiteSpace(txtFolderPath3.Text))
-                //{
-                //    await RunScript(GetScript("spappdev02", "InternalCoreLocalApi", SiteOperation.Stop));
-                //    await Logger.Log($"Starting in {seconds} seconds to ensure process is dead so files won't be locked.", true);
-                //    await Util.Delay(seconds);
-                //    if (cbBackup.IsChecked == true)
-                //    {
-                //        await Logger.Log("Creating backup", true);
-                //        await CreateBackup(txtFolderPath3.Text);
-                //    }
-                //    await Logger.Log($"Starting deployment to: {txtFolderPath3.Text}", true);
-                //    await HandleFilesAndFoldersAsync(txtFolderPath.Text, txtFolderPath3.Text, cbOverwrite.IsChecked);
-                //    await Logger.Log($"Completed deployment to: {txtFolderPath3.Text}", true);
-                //    await RunScript(GetScript("spappdev02", "InternalCoreLocalApi", SiteOperation.Start));
-                //    opsCount++;
-                //}
-                //else
-                //{
-                //    await Logger.Log($"NO PATH FOUND FOR SECOND FOLDER", true);
-                //}
-                //SwitchpbStatus();
-
-                //if (opsCount > 0)
-                //{
-                //    await Logger.Log("-------------------------------------------------------------------------------------\nDeployment Complete", false);
-                //    MessageBox.Show("Deployment Complete", "Done", icon: MessageBoxImage.Information, button: MessageBoxButton.OK);
-                //}
-                //else
-                //    await Logger.Log("-------------------------------------------------------------------------------------\nNO FOLDERS TO DEPLOY TO FOUND.", false);
+                txtbLogs.Text = "";
+                await StartDeploymentProcess(txtFolderPath.Text);
                 btnDeploy.IsEnabled = true;
             }
             catch (Exception ex)
             {
                 btnDeploy.IsEnabled = true;
+                SwitchPbStatus(false);
                 await Logger.Log(ex.Message, true);
             }
         }
 
-        async Task HandleFilesAndFoldersAsync(string folderToDeployPath, string folderToDeployToPath, bool? overwriteSettings)
+        async Task StartDeploymentProcess(string folderToDeployPath)
         {
-            if (!Directory.Exists(folderToDeployPath))
-                Directory.CreateDirectory(folderToDeployPath);
-            var folderToDeployTo = new DirectoryInfo(folderToDeployToPath);
-            
-            await AsyncIO.DeleteFilesAndFoldersAsync(folderToDeployTo, overwriteSettings);
-            await AsyncIO.DirectoryCopyAsync(folderToDeployPath, folderToDeployToPath, true);
-            if (overwriteSettings == true)
-            {
-                var appSettingsFileName = "appsettings.json";
-                var appSettingsDevFileName = "appsettings.Development.json";
-                var tempFolder = Path.Combine(Directory.GetCurrentDirectory(), "temp");
-                var appSettingsFile = Path.Combine(folderToDeployTo.FullName, appSettingsFileName);
-                var appSettingsDevFile = Path.Combine(folderToDeployTo.FullName, appSettingsDevFileName);
-                await AsyncIO.CopyFileAsync(tempFolder, appSettingsFile, true);
-                await AsyncIO.CopyFileAsync(tempFolder, appSettingsDevFile, true);
-                var tempDir = new DirectoryInfo(tempFolder);
-                await tempDir.DeleteAsync(true);
-            }
-        }
 
-        async Task CreateBackup(string folderToDeployToPath)
-        {
-            string backupPath;
-            var folderToDeployToName = folderToDeployToPath.Substring(folderToDeployToPath.LastIndexOf('\\') + 1);
-            var serverCFolder = Util.GetServerCFolder(folderToDeployToPath);
-            if (folderToDeployToPath.StartsWith("\\\\"))            
-                backupPath = Path.Combine(serverCFolder, "DeploymentAppWebsitesBackup");
+            await Logger.Log("-------------------------------------------------------------------------------------\nStarting...", false);
+            SwitchPbStatus(true);
+            if (string.IsNullOrWhiteSpace(folderToDeployPath))
+            {
+                MessageBox.Show("No folder to deploy specified");
+                SwitchPbStatus(false);
+                return;
+            }
+            var opsCount = 0;
+
+            if (!string.IsNullOrWhiteSpace(txtServerName1.Text) && !string.IsNullOrWhiteSpace(txtFolderName1.Text))            
+                opsCount += await Deployer.Deploy(folderToDeployPath, Config.Config.DefaultServerLocation,txtServerName1.Text, txtFolderName1.Text, cbBackup.IsChecked, cbOverwrite.IsChecked, 6);      
             else            
-                backupPath = Path.Combine("C:\\", "DeploymentAppWebsitesBackup");
+                await Logger.Log($"No first folder to deploy to specified", true);
+            
 
-            string fullBackupPath = Path.Combine(backupPath, folderToDeployToName);
+            if (!string.IsNullOrWhiteSpace(txtServerName2.Text) && !string.IsNullOrWhiteSpace(txtFolderName2.Text))            
+                opsCount += await Deployer.Deploy(folderToDeployPath, Config.Config.DefaultServerLocation, txtServerName2.Text, txtFolderName2.Text, cbBackup.IsChecked, cbOverwrite.IsChecked, 6);      
+            else            
+                await Logger.Log($"No second folder to deploy to specified", true);
+            
+            SwitchPbStatus(false);
 
-            var backupDir = Directory.CreateDirectory(fullBackupPath);
-            var backupDirFiles = await backupDir.GetFilesAsync();
-            if (backupDirFiles.Length > 0)
+            if (opsCount > 0)
             {
-                var result = MessageBox.Show($"Backup folder already exists for {folderToDeployToName} in {serverCFolder.Replace("\\c$\\", "")}, do you want to replace it?", "Warning", MessageBoxButton.YesNoCancel);
-                switch (result)
-                {
-                    case MessageBoxResult.Cancel:
-                        throw new Exception("Operation Canceled");
-                    case MessageBoxResult.Yes:
-                        await AsyncIO.DeleteFilesAndFoldersAsync(backupDir, true);
-                        break;
-                    case MessageBoxResult.No:
-                        return;
-                    default:
-                        throw new Exception("Operation Canceled"); 
-                }                
+                await Logger.Log("-------------------------------------------------------------------------------------\nDeployment Complete", false);
+                MessageBox.Show($"{opsCount} {(opsCount > 1 ? "Deployments" : "Deployment")} Complete", "Done", icon: MessageBoxImage.Information, button: MessageBoxButton.OK);
             }
-            await AsyncIO.DirectoryCopyAsync(folderToDeployToPath, backupDir.FullName, true);
+            else
+                await Logger.Log("-------------------------------------------------------------------------------------\nNO FOLDERS TO DEPLOY TO FOUND.", false);
         }
 
-        void SwitchPbStatus()
+        void SwitchPbStatus(bool enabled)
         {
-            pbStatus.IsIndeterminate = !pbStatus.IsIndeterminate;
+            pbStatus.Visibility = enabled ? Visibility.Visible : Visibility.Hidden;
+            pbStatus.IsIndeterminate = enabled;
         }
 
-        void SwitchAppsControls(bool trigger)
+        void SwitchAppsControls(bool enabled)
         {
-            ddlApplications.IsEnabled = trigger;
-            btnEditWebApps.IsEnabled = trigger;
+            ddlApplications.IsEnabled = enabled;
+            btnEditWebApps.IsEnabled = enabled;
         }
 
         private void btnEditServerProfiles_Click(object sender, RoutedEventArgs e)
@@ -261,8 +155,8 @@ namespace DeploymentApp
             {
                 if (dialog.ChangedWebApp.Id == ((WebApp)ddlApplications.SelectedItem).Id)
                 {
-                    txtFolderPath2.Text = dialog.ChangedWebApp.FolderName;
-                    txtFolderPath3.Text = dialog.ChangedWebApp.FolderName;
+                    txtFolderName1.Text = dialog.ChangedWebApp.FolderName;
+                    txtFolderName2.Text = dialog.ChangedWebApp.FolderName;
                 }
             }
         }
@@ -286,17 +180,35 @@ namespace DeploymentApp
         {
             if (ddlApplications.SelectedItem == null) return;
             var selectedItem = ((WebApp)ddlApplications.SelectedItem);
-            txtFolderPath2.Text = selectedItem.FolderName;
-            txtFolderPath3.Text = selectedItem.FolderName;
+            txtFolderName1.Text = selectedItem.FolderName;
+            txtFolderName2.Text = selectedItem.FolderName;
         }
 
         private void ClearFields()
         {
             txtFolderPath.Text = string.Empty;
-            txtFolderPath2.Text = string.Empty;
-            txtFolderPath3.Text = string.Empty;
+            txtFolderName1.Text = string.Empty;
+            txtFolderName2.Text = string.Empty;
             txtServerName1.Text = string.Empty;
             txtServerName2.Text = string.Empty;
+        }
+
+        private void btnChangeDefaultLocation_Click(object sender, RoutedEventArgs e)
+        {
+            new EditDefaultLocationDialog().ShowDialog();
+            lblDeploymentLocation.Content = $@"\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
+        }
+
+        private void cbDeployToC_Checked(object sender, RoutedEventArgs e)
+        {
+            txtServerName1.Text = "c:";
+            txtServerName1.IsEnabled = false;
+        }
+
+        private void cbDeployToC_Unchecked(object sender, RoutedEventArgs e)
+        {
+            txtServerName1.Text = SelectedServerProfile?.FirstServerName;
+            txtServerName1.IsEnabled = true;
         }
     }
 }

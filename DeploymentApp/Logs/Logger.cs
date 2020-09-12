@@ -17,10 +17,12 @@ namespace DeploymentApp.Logs
 
         public static async Task Log(string message, bool logToAppConsole)
         {
+            await Task.Run(() => { 
             string logMsg = $"{DateTime.Now:HH:mm:ss} - {message}{Environment.NewLine}";
-            await File.AppendAllTextAsync(Path.Combine(@"C:\temp", "DeploymentAppsLog", $"WPFLOG {DateTime.Now:dd-MM-yyyy HH}.txt"), logMsg);
+            File.AppendAllText(Path.Combine(@"C:\temp", "DeploymentAppsLog", $"WPFLOG {DateTime.Now:dd-MM-yyyy HH}.txt"), logMsg);
             if (logToAppConsole)
                 Application.Current.Dispatcher.Invoke(() => MainWindow.LogsTextBlock.Text += logMsg);
+            });
         }
     }
 }

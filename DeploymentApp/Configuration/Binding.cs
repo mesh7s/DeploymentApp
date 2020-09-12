@@ -34,6 +34,12 @@ namespace DeploymentApp.Configuration
             }, Formatting.Indented));
         }
 
+        public void UpdateDefaultServerLocation(string newLocation)
+        {
+            Config.DefaultServerLocation = newLocation;
+            SaveChanges();
+        }
+
         public ObservableCollection<ServerProfile> GetServerProfiles()
         {
             return Config.ServerProfiles;

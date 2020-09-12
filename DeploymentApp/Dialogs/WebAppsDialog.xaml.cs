@@ -28,7 +28,7 @@ namespace DeploymentApp.Dialogs
         {
             InitializeComponent();
             _serverId = serverId;
-            _config = MainWindow._config;
+            _config = MainWindow.Config;
             icApps.ItemsSource = _config.Config.ServerProfiles.FirstOrDefault(x => x.Id == serverId).Applications;
         }
 

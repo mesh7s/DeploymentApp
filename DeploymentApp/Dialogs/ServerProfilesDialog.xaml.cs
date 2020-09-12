@@ -26,7 +26,7 @@ namespace DeploymentApp.Dialogs
         public ServerProfilesDialog()
         {
             InitializeComponent();
-            _config = MainWindow._config;
+            _config = MainWindow.Config;
             icServerProfiles.ItemsSource = _config.GetServerProfiles();
         }
 

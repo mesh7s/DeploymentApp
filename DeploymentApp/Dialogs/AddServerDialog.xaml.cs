@@ -18,7 +18,7 @@ namespace DeploymentApp.Dialogs
         public AddServerDialog(ManageProcess process, ServerProfile profileForUpdate = null)
         {
             InitializeComponent();
-            _config = MainWindow._config;
+            _config = MainWindow.Config;
             _process = process;
             this.profileForUpdate = profileForUpdate;
             if (process == ManageProcess.Update)
