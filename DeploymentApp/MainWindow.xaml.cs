@@ -60,7 +60,7 @@ namespace DeploymentApp
                 btnDeploy.IsEnabled = false;
                 txtbLogs.Text = "";
                 SwitchPbStatus(true);
-                var deployer = new Deployer(new DeploymentParams
+                var deployer = new DeploymentManager(new DeploymentParams
                 {
                     FolderToDeployPath = txtFolderPath.Text,
                     ServerLocation = Config.Config.DefaultServerLocation,

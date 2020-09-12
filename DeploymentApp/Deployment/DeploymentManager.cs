@@ -12,10 +12,10 @@ using static DeploymentApp.Enums;
 
 namespace DeploymentApp.Deployment
 {
-    public class Deployer
+    public class DeploymentManager
     {
         private readonly DeploymentParams _deploymentParams;
-        public Deployer(DeploymentParams deploymentParams)
+        public DeploymentManager(DeploymentParams deploymentParams)
         {
             _deploymentParams = deploymentParams;
         }
