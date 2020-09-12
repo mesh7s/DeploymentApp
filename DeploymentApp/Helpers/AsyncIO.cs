@@ -43,40 +43,6 @@ namespace DeploymentApp.Helpers
             }
         }
 
-        public static async Task CreateBackup(string folderToDeployToPath, string folderToDeployToName)
-        {
-            string backupPath;
-            if (folderToDeployToPath.StartsWith("\\\\"))
-            {
-                var serverCFolder = folderToDeployToPath.ToLower().Split("c$")[0] + "\\c$";
-                backupPath = Path.Combine(serverCFolder, "DeploymentAppWebsitesBackup");
-            }
-            else
-                backupPath = Path.Combine("C:\\", "DeploymentAppWebsitesBackup");
-
-            string fullBackupPath = Path.Combine(backupPath, folderToDeployToName);
-
-            var backupDir = Directory.CreateDirectory(fullBackupPath);
-            var backupDirFiles = await backupDir.GetFilesAsync();
-            if (backupDirFiles.Length > 0)
-            {
-                var result = MessageBox.Show($"Backup folder already exists for {folderToDeployToName} in {backupPath}, do you want to replace it?", "Warning", MessageBoxButton.YesNoCancel);
-                switch (result)
-                {
-                    case MessageBoxResult.Cancel:
-                        throw new Exception("Operation Canceled");
-                    case MessageBoxResult.Yes:
-                        await DeleteFilesAndFoldersAsync(backupDir, true);
-                        break;
-                    case MessageBoxResult.No:
-                        return;
-                    default:
-                        throw new Exception("Operation Canceled");
-                }
-            }
-            await DirectoryCopyAsync(folderToDeployToPath, backupDir.FullName, true);
-        }
-
         public static async Task DeleteFilesAndFoldersAsync(DirectoryInfo folderToDeployTo, bool? overwriteSettings = false)
         {
             if (overwriteSettings == false)
