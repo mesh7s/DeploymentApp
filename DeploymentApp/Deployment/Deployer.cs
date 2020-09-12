@@ -26,20 +26,15 @@ namespace DeploymentApp.Deployment
             await Logger.Log("-------------------------------------------------------------------------------------\nStarting...", false);
             if (string.IsNullOrWhiteSpace(_deploymentParams.FolderToDeployPath))
             {
-                MessageBox.Show("No folder to deploy specified");
+                MessageBox.Show("No folder to deploy was specified");
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(_deploymentParams.FirstServerName) && !string.IsNullOrWhiteSpace(_deploymentParams.FirstFolderName))
-                opsCount += await Deploy(_deploymentParams.FolderToDeployPath, _deploymentParams.ServerLocation, _deploymentParams.FirstServerName, _deploymentParams.FirstFolderName, _deploymentParams.Backup, _deploymentParams.Overwrite, _deploymentParams.SecondsToDelay);
-            else
-                await Logger.Log($"No first folder to deploy to specified", true);
-
-
-            if (!string.IsNullOrWhiteSpace(_deploymentParams.SecondServerName) && !string.IsNullOrWhiteSpace(_deploymentParams.SecondFolderName))
-                opsCount += await Deploy(_deploymentParams.FolderToDeployPath, _deploymentParams.ServerLocation, _deploymentParams.SecondServerName, _deploymentParams.SecondFolderName, _deploymentParams.Backup, _deploymentParams.Overwrite, _deploymentParams.SecondsToDelay);
-            else
-                await Logger.Log($"No second folder to deploy to specified", true);
+            foreach (var deployToProps in _deploymentParams.DeployToProps)
+                if (!string.IsNullOrWhiteSpace(deployToProps.ServerName) && !string.IsNullOrWhiteSpace(deployToProps.FolderName))
+                    opsCount += await Deploy(_deploymentParams.FolderToDeployPath, _deploymentParams.ServerLocation, deployToProps.ServerName, deployToProps.FolderName, _deploymentParams.Backup, _deploymentParams.Overwrite, _deploymentParams.SecondsToDelay);
+                else
+                    await Logger.Log($"No folder to deploy to was specified", true);            
 
             if (opsCount > 0)
             {

@@ -52,43 +52,27 @@ namespace DeploymentApp
                 txtFolderPath.Text = dialog.SelectedPath;
             }
         }
-        private void btnBrowse2_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new VistaFolderBrowserDialog();
-            if (dialog.ShowDialog(this).GetValueOrDefault())
-            {
-                txtFolderName1.Text = dialog.SelectedPath;
-            }
-        }
-        private void btnBrowse3_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new VistaFolderBrowserDialog();
-            if (dialog.ShowDialog(this).GetValueOrDefault())
-            {
-                txtFolderName2.Text = dialog.SelectedPath;
-            }
-        }
-
+        
         private async void btnDeploy_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 btnDeploy.IsEnabled = false;
                 txtbLogs.Text = "";
-                var deploymentParams = new DeploymentParams
+                SwitchPbStatus(true);
+                var deployer = new Deployer(new DeploymentParams
                 {
                     FolderToDeployPath = txtFolderPath.Text,
                     ServerLocation = Config.Config.DefaultServerLocation,
-                    FirstServerName = txtServerName1.Text,
-                    FirstFolderName = txtFolderName1.Text,
-                    SecondServerName = txtServerName2.Text,
-                    SecondFolderName = txtFolderName2.Text,
+                    DeployToProps = new List<DeployToProps> 
+                    { 
+                        new DeployToProps { ServerName = txtServerName1.Text, FolderName = txtFolderName1.Text,},
+                        new DeployToProps { ServerName = txtServerName2.Text, FolderName = txtFolderName2.Text,}
+                    },
                     Backup = cbBackup.IsChecked,
                     Overwrite = cbOverwrite.IsChecked,
                     SecondsToDelay = 6
-                };
-                var deployer = new Deployer(deploymentParams);
-                SwitchPbStatus(true);
+                });
                 await deployer.StartDeploymentProcess();
                 SwitchPbStatus(false);
                 btnDeploy.IsEnabled = true;

@@ -38,9 +38,6 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <Button x:Name="btnBrowse2" Content="Browse" HorizontalAlignment="Left"   
-            Margin="448,282,0,0" VerticalAlignment="Top" Width="120" 
-            RenderTransformOrigin="1.047,0.821" Height="22" Click="btnBrowse2_Click"/>
         <TextBox ToolTip="Enter a folder located in inetpub\wwwroot" HorizontalAlignment="Left" Height="22" Margin="206,349,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="218" x:Name="txtFolderName2"/>
         <TextBlock IsHitTestVisible="False" Text="FOLDER TO DEPLOY TO" VerticalAlignment="Top" Margin="222,352,796,0" Foreground="DarkGray" Height="34">
             <TextBlock.Style>
@@ -80,9 +77,6 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <Button x:Name="btnBrowse3" Content="Browse" HorizontalAlignment="Left"   
-            Margin="448,349,0,0" VerticalAlignment="Top" Width="120" 
-            RenderTransformOrigin="1.047,0.821" Height="22" Click="btnBrowse3_Click"/>
         <Label x:Name="lblMessage" Content="Deploy .NET Core WebApi folder to specified folders." HorizontalAlignment="Left" Margin="14,10,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnDeploy" Content="DEPLOY" HorizontalAlignment="Left" Margin="427,419,0,0" VerticalAlignment="Top" Width="162" Height="47" Click="btnDeploy_Click"/>
         <ProgressBar x:Name="pbStatus" HorizontalAlignment="Left" Height="19" Margin="14,433,0,0" VerticalAlignment="Top" Width="386" Minimum="0" Maximum="100" IsIndeterminate="False" Visibility="Hidden" />
