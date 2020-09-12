@@ -75,7 +75,22 @@ namespace DeploymentApp
             {
                 btnDeploy.IsEnabled = false;
                 txtbLogs.Text = "";
-                await StartDeploymentProcess(txtFolderPath.Text);
+                var deploymentParams = new DeploymentParams
+                {
+                    FolderToDeployPath = txtFolderPath.Text,
+                    ServerLocation = Config.Config.DefaultServerLocation,
+                    FirstServerName = txtServerName1.Text,
+                    FirstFolderName = txtFolderName1.Text,
+                    SecondServerName = txtServerName2.Text,
+                    SecondFolderName = txtFolderName2.Text,
+                    Backup = cbBackup.IsChecked,
+                    Overwrite = cbOverwrite.IsChecked,
+                    SecondsToDelay = 6
+                };
+                var deployer = new Deployer(deploymentParams);
+                SwitchPbStatus(true);
+                await deployer.StartDeploymentProcess();
+                SwitchPbStatus(false);
                 btnDeploy.IsEnabled = true;
             }
             catch (Exception ex)
@@ -84,41 +99,6 @@ namespace DeploymentApp
                 SwitchPbStatus(false);
                 await Logger.Log(ex.Message, true);
             }
-        }
-
-        async Task StartDeploymentProcess(string folderToDeployPath)
-        {
-
-            await Logger.Log("-------------------------------------------------------------------------------------\nStarting...", false);
-            SwitchPbStatus(true);
-            if (string.IsNullOrWhiteSpace(folderToDeployPath))
-            {
-                MessageBox.Show("No folder to deploy specified");
-                SwitchPbStatus(false);
-                return;
-            }
-            var opsCount = 0;
-
-            if (!string.IsNullOrWhiteSpace(txtServerName1.Text) && !string.IsNullOrWhiteSpace(txtFolderName1.Text))            
-                opsCount += await Deployer.Deploy(folderToDeployPath, Config.Config.DefaultServerLocation,txtServerName1.Text, txtFolderName1.Text, cbBackup.IsChecked, cbOverwrite.IsChecked, 6);      
-            else            
-                await Logger.Log($"No first folder to deploy to specified", true);
-            
-
-            if (!string.IsNullOrWhiteSpace(txtServerName2.Text) && !string.IsNullOrWhiteSpace(txtFolderName2.Text))            
-                opsCount += await Deployer.Deploy(folderToDeployPath, Config.Config.DefaultServerLocation, txtServerName2.Text, txtFolderName2.Text, cbBackup.IsChecked, cbOverwrite.IsChecked, 6);      
-            else            
-                await Logger.Log($"No second folder to deploy to specified", true);
-            
-            SwitchPbStatus(false);
-
-            if (opsCount > 0)
-            {
-                await Logger.Log("-------------------------------------------------------------------------------------\nDeployment Complete", false);
-                MessageBox.Show($"{opsCount} {(opsCount > 1 ? "Deployments" : "Deployment")} Complete", "Done", icon: MessageBoxImage.Information, button: MessageBoxButton.OK);
-            }
-            else
-                await Logger.Log("-------------------------------------------------------------------------------------\nNO FOLDERS TO DEPLOY TO FOUND.", false);
         }
 
         void SwitchPbStatus(bool enabled)
