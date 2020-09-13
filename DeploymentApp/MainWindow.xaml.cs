@@ -27,9 +27,9 @@ namespace DeploymentApp
             Config = new Configuration.Binding();
             ddlServerProfiles.BindComboBox(Config.Config.ServerProfiles, "ProfileName", "Id");
             lblDeploymentLocation.Content = $@"\\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
-            AutoUpdater.Start(@"C:\Users\alayedm\Documents\autest.xml");
+            AutoUpdater.Start(@"D:\dev\autest.xml");
             AutoUpdater.ShowSkipButton = false;
-            AutoUpdater.InstalledVersion = new Version("1.0.0.0");
+            AutoUpdater.InstalledVersion = new Version("1.0.0.3");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
