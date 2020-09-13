@@ -80,8 +80,8 @@
         <Label x:Name="lblMessage" Content="Deploy .NET Core WebApi folder to specified folders." HorizontalAlignment="Left" Margin="14,10,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnDeploy" Content="DEPLOY" HorizontalAlignment="Left" Margin="427,419,0,0" VerticalAlignment="Top" Width="162" Height="47" Click="btnDeploy_Click"/>
         <ProgressBar x:Name="pbStatus" HorizontalAlignment="Left" Height="19" Margin="14,433,0,0" VerticalAlignment="Top" Width="386" Minimum="0" Maximum="100" IsIndeterminate="False" Visibility="Hidden" />
-        <ScrollViewer Margin="644,136,10,34">
-            <TextBlock x:Name="txtbLogs" TextWrapping="Wrap" Height="396"/>
+        <ScrollViewer x:Name="svLogs" Margin="644,136,10,34" ScrollChanged="svLogs_ScrollChanged">
+            <TextBlock x:Name="txtbLogs" TextWrapping="Wrap"/>
         </ScrollViewer>
         <CheckBox Content="Overwrite settings" HorizontalAlignment="Left" Margin="671,16,0,0" VerticalAlignment="Top" Height="18" Width="141" x:Name="cbOverwrite"/>
         <CheckBox Content="Create Backup" HorizontalAlignment="Left" Margin="851,17,0,0" VerticalAlignment="Top" x:Name="cbBackup" />

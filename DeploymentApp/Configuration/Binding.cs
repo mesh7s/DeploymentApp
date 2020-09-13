@@ -29,7 +29,7 @@ namespace DeploymentApp.Configuration
             file.Close(); // closing file to be able to write text to it.
             File.WriteAllText(file.Name, JsonConvert.SerializeObject(new Config
             {
-                DefaultServerLocation = "\\c$\\inetpub\\wwwroot\\",
+                DefaultServerLocation = "c$\\inetpub\\wwwroot\\",
                 ServerProfiles = new ObservableCollection<ServerProfile>()
             }, Formatting.Indented));
         }

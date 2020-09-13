@@ -36,7 +36,7 @@ namespace DeploymentApp
             InitializeComponent();
             Config = new Configuration.Binding();
             Util.BindComboBox(ddlServerProfiles, Config.Config.ServerProfiles, "ProfileName", "Id");
-            lblDeploymentLocation.Content = $@"\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
+            lblDeploymentLocation.Content = $@"\\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -173,6 +173,32 @@ namespace DeploymentApp
         {
             txtServerName1.Text = SelectedServerProfile?.FirstServerName;
             txtServerName1.IsEnabled = true;
+        }
+
+        private bool autoScroll = true;
+        private void svLogs_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            // User scroll event : set or unset auto-scroll mode
+            if (e.ExtentHeightChange == 0)
+            {   // Content unchanged : user scroll event
+                if (svLogs.VerticalOffset == svLogs.ScrollableHeight)
+                {   // Scroll bar is in bottom
+                    // Set auto-scroll mode
+                    autoScroll = true;
+                }
+                else
+                {   // Scroll bar isn't in bottom
+                    // Unset auto-scroll mode
+                    autoScroll = false;
+                }
+            }
+
+            // Content scroll event : auto-scroll eventually
+            if (autoScroll && e.ExtentHeightChange != 0)
+            {   // Content changed and auto-scroll mode set
+                // Autoscroll
+                svLogs.ScrollToVerticalOffset(svLogs.ExtentHeight);
+            }
         }
     }
 }

@@ -67,7 +67,7 @@ namespace DeploymentApp.Deployment
             string backupPath;
             if (folderToDeployToPath.StartsWith("\\\\"))
             {
-                var serverCFolder = folderToDeployToPath.ToLower().Split("c$")[0] + "\\c$";
+                var serverCFolder = folderToDeployToPath.ToLower().Split("c$")[0] + "c$";
                 backupPath = Path.Combine(serverCFolder, "DeploymentAppWebsitesBackup");
             }
             else
