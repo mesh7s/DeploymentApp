@@ -1,25 +1,14 @@
-﻿using DeploymentApp.Configuration;
+﻿using AutoUpdaterDotNET;
 using DeploymentApp.Deployment;
 using DeploymentApp.Dialogs;
 using DeploymentApp.Helpers;
 using DeploymentApp.Logs;
 using DeploymentApp.Models;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.Web.Administration;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.DirectoryServices;
-using System.IO;
-using System.Management.Automation;
-using System.Management.Automation.Runspaces;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using static DeploymentApp.Enums;
 
 namespace DeploymentApp
 {
@@ -31,12 +20,16 @@ namespace DeploymentApp
         public static TextBlock LogsTextBlock;
         public static Configuration.Binding Config;
         public ServerProfile SelectedServerProfile { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
             Config = new Configuration.Binding();
             ddlServerProfiles.BindComboBox(Config.Config.ServerProfiles, "ProfileName", "Id");
             lblDeploymentLocation.Content = $@"\\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
+            AutoUpdater.Start(@"C:\Users\alayedm\Documents\autest.xml");
+            AutoUpdater.ShowSkipButton = false;
+            AutoUpdater.InstalledVersion = new Version("1.0.0.0");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
