@@ -35,7 +35,7 @@ namespace DeploymentApp
         {
             InitializeComponent();
             Config = new Configuration.Binding();
-            Util.BindComboBox(ddlServerProfiles, Config.Config.ServerProfiles, "ProfileName", "Id");
+            ddlServerProfiles.BindComboBox(Config.Config.ServerProfiles, "ProfileName", "Id");
             lblDeploymentLocation.Content = $@"\\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
         }
 
@@ -73,7 +73,7 @@ namespace DeploymentApp
                     Overwrite = cbOverwrite.IsChecked,
                     SecondsToDelay = 6
                 });
-                await deployer.StartDeploymentProcess();
+                //await deployer.StartDeploymentProcess();
                 SwitchPbStatus(false);
                 btnDeploy.IsEnabled = true;
             }
@@ -131,9 +131,26 @@ namespace DeploymentApp
             ClearFields();
             var selectedItem = ((ServerProfile)ddlServerProfiles.SelectedItem);
             SelectedServerProfile = selectedItem;
-            txtServerName1.Text = selectedItem.FirstServerName;
-            txtServerName2.Text = selectedItem.SecondServerName;
-            Util.BindComboBox(ddlApplications, selectedItem.Applications, "Name", "FolderName");
+            cbDeployToC.IsEnabled = false;
+            cbDeployToC.IsChecked = false;
+            if (selectedItem.FirstServerName.ToLower() == Environment.MachineName.ToLower())
+            {
+                txtServerName1.ModifyTextBox("c:", false);
+                txtServerName2.ModifyTextBox(selectedItem.SecondServerName, true);
+            }
+            else if (selectedItem.SecondServerName.ToLower() == Environment.MachineName.ToLower())
+            {
+                txtServerName1.ModifyTextBox(selectedItem.FirstServerName, true);
+                txtServerName2.ModifyTextBox("c:", false);
+            }
+            else
+            {
+                cbDeployToC.IsEnabled = true;
+                txtServerName1.ModifyTextBox(selectedItem.FirstServerName, true);
+                txtServerName2.ModifyTextBox(selectedItem.SecondServerName, true);
+            }
+
+            ddlApplications.BindComboBox(selectedItem.Applications, "Name", "FolderName");
             if (selectedItem.Applications != null)
                 SwitchAppsControls(true);
             else
@@ -165,14 +182,12 @@ namespace DeploymentApp
 
         private void cbDeployToC_Checked(object sender, RoutedEventArgs e)
         {
-            txtServerName1.Text = "c:";
-            txtServerName1.IsEnabled = false;
+            txtServerName2.ModifyTextBox("c:", false);
         }
 
         private void cbDeployToC_Unchecked(object sender, RoutedEventArgs e)
         {
-            txtServerName1.Text = SelectedServerProfile?.FirstServerName;
-            txtServerName1.IsEnabled = true;
+            txtServerName1.ModifyTextBox(SelectedServerProfile?.FirstServerName, true);
         }
 
         private bool autoScroll = true;

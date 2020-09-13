@@ -41,13 +41,6 @@ namespace DeploymentApp.Helpers
             return sb.ToString();
         }
 
-        public static void BindComboBox<T>(ComboBox ddl, ObservableCollection<T> source,string text, string value)
-        {
-            ddl.ItemsSource = source;
-            ddl.DisplayMemberPath = text;
-            ddl.SelectedValuePath = value;
-        }
-
         public static string PrepareDeployToPath(string serverName, string location, string folderName)
         {
             if (serverName.ToLower() == "c:")
