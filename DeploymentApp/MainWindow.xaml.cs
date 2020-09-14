@@ -21,7 +21,7 @@ namespace DeploymentApp
     {
         public static TextBlock LogsTextBlock;
         public static Configuration.Binding Config;
-        public readonly string _currentVersion = "1.1.0.1";
+        public readonly string _currentVersion = "1.1.0.2";
         public ServerProfile SelectedServerProfile { get; set; }
 
         public MainWindow()
@@ -105,8 +105,15 @@ namespace DeploymentApp
             {
                 if (dialog.ChangedServer.Id == SelectedServerProfile.Id)
                 {
-                    txtServerName1.Text = dialog.ChangedServer.FirstServerName;
-                    txtServerName2.Text = dialog.ChangedServer.SecondServerName;
+                    if (string.Equals(dialog.ChangedServer.FirstServerName, Environment.MachineName, StringComparison.OrdinalIgnoreCase))
+                        txtServerName1.ModifyTextBox("c:", false);
+                    else
+                        txtServerName1.ModifyTextBox(dialog.ChangedServer.FirstServerName, true);
+
+                    if (string.Equals(dialog.ChangedServer.SecondServerName, Environment.MachineName, StringComparison.OrdinalIgnoreCase))
+                        txtServerName2.ModifyTextBox("c:", false);
+                    else
+                        txtServerName2.ModifyTextBox(dialog.ChangedServer.SecondServerName, true);
                 }
             }
         }
@@ -182,7 +189,7 @@ namespace DeploymentApp
 
         private void cbDeployToC_Checked(object sender, RoutedEventArgs e)
         {
-            txtServerName2.ModifyTextBox("c:", false);
+            txtServerName1.ModifyTextBox("c:", false);
         }
 
         private void cbDeployToC_Unchecked(object sender, RoutedEventArgs e)
