@@ -120,6 +120,7 @@
         <Label x:Name="lblDeploymentLocation" Content="None" HorizontalAlignment="Left" Margin="837,57,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnChangeDefaultLocation" Content="Change Default Location" HorizontalAlignment="Left" Margin="958,81,0,0" VerticalAlignment="Top" Width="147" Click="btnChangeDefaultLocation_Click"/>
         <CheckBox x:Name="cbDeployToC" Content="Deploy to C: (ie: c:/inetpub/wwwroot/...)" HorizontalAlignment="Left" Margin="24,262,0,0" VerticalAlignment="Top" Checked="cbDeployToC_Checked" Unchecked="cbDeployToC_Unchecked"/>
+        <Label x:Name="lblVersion" Foreground="#ccc" HorizontalAlignment="Left" Margin="15,540,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
