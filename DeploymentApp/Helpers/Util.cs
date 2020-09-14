@@ -1,6 +1,9 @@
 ﻿using DeploymentApp.Logs;
+using System;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
@@ -46,6 +49,26 @@ namespace DeploymentApp.Helpers
             if (serverName.ToLower() == "c:")
                 return Path.Combine(serverName, location.ToLower().Replace("c$\\", string.Empty), folderName);
             return Path.Combine($"\\\\{serverName}", location, folderName);
+        }
+
+        public static async Task<Bitmap> GetBitmapFromUrl(string imageUrl)
+        {
+            using var client = new HttpClient();
+            var response = client.GetAsync(imageUrl).Result;
+            var stream = await response.Content.ReadAsStreamAsync();
+            return new Bitmap(stream);
+        }
+
+        public static Bitmap Base64StringToBitmap(string base64String)
+        {
+            Bitmap bmpReturn = null;
+            byte[] byteBuffer = Convert.FromBase64String(base64String);
+            using (var memoryStream = new MemoryStream(byteBuffer))
+            {
+                memoryStream.Position = 0;
+                bmpReturn = (Bitmap)System.Drawing.Image.FromStream(memoryStream);
+            }
+            return bmpReturn;
         }
     }
 }

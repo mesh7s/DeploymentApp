@@ -7,6 +7,8 @@ using DeploymentApp.Models;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -27,9 +29,12 @@ namespace DeploymentApp
             Config = new Configuration.Binding();
             ddlServerProfiles.BindComboBox(Config.Config.ServerProfiles, "ProfileName", "Id");
             lblDeploymentLocation.Content = $@"\\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
-            AutoUpdater.Start(@"D:\dev\autest.xml");
             AutoUpdater.ShowSkipButton = false;
-            AutoUpdater.InstalledVersion = new Version("1.0.0.3");
+            AutoUpdater.InstalledVersion = new Version("1.1.0.0");
+            AutoUpdater.MainIcon = Util.GetBitmapFromUrl("https://img.icons8.com/nolan/64/approve-and-update.png").Result;
+            AutoUpdater.SmallIcon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+            AutoUpdater.DownloadImage = Util.GetBitmapFromUrl("https://img.icons8.com/fluent/48/000000/download.png").Result;
+            AutoUpdater.Start("https://mesh.imfast.io/autest.xml");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
