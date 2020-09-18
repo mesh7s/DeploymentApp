@@ -21,7 +21,7 @@ namespace DeploymentApp
     {
         public static TextBlock LogsTextBlock;
         public static Configuration.Binding Config;
-        public readonly string _currentVersion = "1.1.0.5";
+        public readonly string _currentVersion = "1.1.0.6";
         public ServerProfile SelectedServerProfile { get; set; }
 
         public MainWindow()
