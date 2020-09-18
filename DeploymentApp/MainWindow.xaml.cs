@@ -21,7 +21,7 @@ namespace DeploymentApp
     {
         public static TextBlock LogsTextBlock;
         public static Configuration.Binding Config;
-        public readonly string _currentVersion = "1.1.0.3";
+        public readonly string _currentVersion = "1.1.0.4";
         public ServerProfile SelectedServerProfile { get; set; }
 
         public MainWindow()
@@ -73,7 +73,7 @@ namespace DeploymentApp
                     Overwrite = cbOverwrite.IsChecked,
                     SecondsToDelay = 6
                 });
-                //await deployer.StartDeploymentProcess();
+                await deployer.StartDeploymentProcess();
                 SwitchPbStatus(false);
                 btnDeploy.IsEnabled = true;
             }
