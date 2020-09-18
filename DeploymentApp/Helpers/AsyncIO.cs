@@ -11,9 +11,9 @@ namespace DeploymentApp.Helpers
 {
     public static class AsyncIO
     {
-        public static Task CreateDirectoryAsync(string destDirName)
+        public static Task<DirectoryInfo> CreateDirectoryAsync(string destDirName)
         {
-            return Task.Run(() => { Directory.CreateDirectory(destDirName); });
+            return Task.Run(() => Directory.CreateDirectory(destDirName));
         }
 
         public static Task CopyFileAsync(string sourceFileName, string destFileName, bool overwrite = false)
@@ -23,23 +23,21 @@ namespace DeploymentApp.Helpers
 
         public static async Task HandleFilesAndFoldersAsync(string folderToDeployPath, string folderToDeployToPath, bool? overwriteSettings)
         {
-            if (!Directory.Exists(folderToDeployPath))
-                Directory.CreateDirectory(folderToDeployPath);
-            var folderToDeployTo = new DirectoryInfo(folderToDeployToPath);
+            var folderToDeployTo = await CreateDirectoryAsync(folderToDeployToPath);
 
             await DeleteFilesAndFoldersAsync(folderToDeployTo, overwriteSettings);
             await DirectoryCopyAsync(folderToDeployPath, folderToDeployToPath, true);
-            if (overwriteSettings == true)
+            if (overwriteSettings == false)
             {
                 var appSettingsFileName = "appsettings.json";
                 var appSettingsDevFileName = "appsettings.Development.json";
-                var tempFolder = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+                var tempFolder = Path.Combine("c:\\temp", folderToDeployTo.Name);
                 var appSettingsFile = Path.Combine(folderToDeployTo.FullName, appSettingsFileName);
                 var appSettingsDevFile = Path.Combine(folderToDeployTo.FullName, appSettingsDevFileName);
                 await CopyFileAsync(tempFolder, appSettingsFile, true);
                 await CopyFileAsync(tempFolder, appSettingsDevFile, true);
                 var tempDir = new DirectoryInfo(tempFolder);
-                await tempDir.DeleteAsync(true);
+                await tempDir.DeleteAsync(false);
             }
         }
 
@@ -49,7 +47,7 @@ namespace DeploymentApp.Helpers
             {
                 var appSettingsFileName = "appsettings.json";
                 var appSettingsDevFileName = "appsettings.Development.json";
-                var tempFolder = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+                var tempFolder = Path.Combine("c:\\temp", folderToDeployTo.Name);
                 await CreateDirectoryAsync(tempFolder);
                 var appSettingsFile = Path.Combine(folderToDeployTo.FullName, appSettingsFileName);
                 var appSettingsDevFile = Path.Combine(folderToDeployTo.FullName, appSettingsDevFileName);
