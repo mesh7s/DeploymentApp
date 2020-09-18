@@ -1,9 +1,11 @@
-﻿using DeploymentApp.Models;
+﻿using DeploymentApp.Logs;
+using DeploymentApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -42,9 +44,16 @@ namespace DeploymentApp.Dialogs
 
         private void btnEditWebApp_Click(object sender, RoutedEventArgs e)
         {
-            var addWebAppDialog = new AddWebAppDialog(ManageProcess.Update, _serverId, _config.GetWebApp(_serverId, new Guid(((Button)sender).Tag.ToString())));
-            if (addWebAppDialog.ShowDialog() == true)
-                ChangedWebApp = addWebAppDialog.ChangedWebApp;
+            try
+            {
+                var addWebAppDialog = new AddWebAppDialog(ManageProcess.Update, _serverId, _config.GetWebApp(_serverId, new Guid(((Button)sender).Tag.ToString())));
+                if (addWebAppDialog.ShowDialog() == true)
+                    ChangedWebApp = addWebAppDialog.ChangedWebApp;
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => Logger.Log(ex.Message, true));
+            }
         }
     }
 }

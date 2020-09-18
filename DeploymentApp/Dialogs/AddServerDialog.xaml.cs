@@ -1,6 +1,8 @@
-﻿using DeploymentApp.Models;
+﻿using DeploymentApp.Logs;
+using DeploymentApp.Models;
 using System;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using static DeploymentApp.Enums;
 
@@ -36,27 +38,34 @@ namespace DeploymentApp.Dialogs
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtProfileName.Text) || string.IsNullOrWhiteSpace(txtServerName1.Text)) return;
-
-            if (_process == ManageProcess.Add)
-                _config.AddServerProfile(new ServerProfile
-                {
-                    Id = Guid.NewGuid(),
-                    ProfileName = txtProfileName.Text,
-                    FirstServerName = txtServerName1.Text,
-                    SecondServerName = txtServerName2.Text,
-                    Applications = new ObservableCollection<WebApp>()
-                });
-            else
+            try
             {
-                profileForUpdate.ProfileName = txtProfileName.Text;
-                profileForUpdate.FirstServerName = txtServerName1.Text;
-                profileForUpdate.SecondServerName = txtServerName2.Text;
-                _config.UpdateServerProfile(profileForUpdate);
-                ChangedProfile = profileForUpdate;
-            }
+                if (string.IsNullOrWhiteSpace(txtProfileName.Text) || string.IsNullOrWhiteSpace(txtServerName1.Text)) return;
 
-            DialogResult = true;
+                if (_process == ManageProcess.Add)
+                    _config.AddServerProfile(new ServerProfile
+                    {
+                        Id = Guid.NewGuid(),
+                        ProfileName = txtProfileName.Text,
+                        FirstServerName = txtServerName1.Text,
+                        SecondServerName = txtServerName2.Text,
+                        Applications = new ObservableCollection<WebApp>()
+                    });
+                else
+                {
+                    profileForUpdate.ProfileName = txtProfileName.Text;
+                    profileForUpdate.FirstServerName = txtServerName1.Text;
+                    profileForUpdate.SecondServerName = txtServerName2.Text;
+                    _config.UpdateServerProfile(profileForUpdate);
+                    ChangedProfile = profileForUpdate;
+                }
+
+                DialogResult = true;
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => Logger.Log(ex.Message, true));
+            }
         }
     }
 }

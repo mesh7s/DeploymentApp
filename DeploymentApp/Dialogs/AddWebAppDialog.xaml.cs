@@ -1,7 +1,9 @@
-﻿using DeploymentApp.Models;
+﻿using DeploymentApp.Logs;
+using DeploymentApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -41,24 +43,31 @@ namespace DeploymentApp.Dialogs
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtWebAppName.Text) || string.IsNullOrWhiteSpace(txtFolderName.Text)) return;
-
-            if (_process == ManageProcess.Add)
-                _config.AddWebApp(_serverId, new WebApp
-                {
-                    Id = Guid.NewGuid(),
-                    Name = txtWebAppName.Text,
-                    FolderName = txtFolderName.Text
-                });
-            else
+            try
             {
-                _webAppForUpdate.Name = txtWebAppName.Text;
-                _webAppForUpdate.FolderName = txtFolderName.Text;
-                _config.UpdateWebApp(_serverId, _webAppForUpdate);
-                ChangedWebApp = _webAppForUpdate;
-            }
+                if (string.IsNullOrWhiteSpace(txtWebAppName.Text) || string.IsNullOrWhiteSpace(txtFolderName.Text)) return;
 
-            DialogResult = true;
+                if (_process == ManageProcess.Add)
+                    _config.AddWebApp(_serverId, new WebApp
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = txtWebAppName.Text,
+                        FolderName = txtFolderName.Text
+                    });
+                else
+                {
+                    _webAppForUpdate.Name = txtWebAppName.Text;
+                    _webAppForUpdate.FolderName = txtFolderName.Text;
+                    _config.UpdateWebApp(_serverId, _webAppForUpdate);
+                    ChangedWebApp = _webAppForUpdate;
+                }
+
+                DialogResult = true;
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => Logger.Log(ex.Message, true));
+            }
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)

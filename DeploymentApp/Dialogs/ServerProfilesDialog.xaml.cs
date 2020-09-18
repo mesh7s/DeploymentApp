@@ -4,6 +4,7 @@ using DeploymentApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -35,8 +36,15 @@ namespace DeploymentApp.Dialogs
 
         private void btnAddServerProfile_Click(object sender, RoutedEventArgs e)
         {
-            var addServerDialog = new AddServerDialog(ManageProcess.Add);
-            addServerDialog.ShowDialog();
+            try
+            {
+                var addServerDialog = new AddServerDialog(ManageProcess.Add);
+                addServerDialog.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => Logger.Log(ex.Message, true));
+            }
         }
 
         private void btnEditServerProfile_Click(object sender, RoutedEventArgs e)

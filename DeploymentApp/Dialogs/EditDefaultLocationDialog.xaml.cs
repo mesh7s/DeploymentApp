@@ -1,6 +1,8 @@
-﻿using System;
+﻿using DeploymentApp.Logs;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -30,8 +32,15 @@ namespace DeploymentApp.Dialogs
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            _config.UpdateDefaultServerLocation(txtDefaultLocation.Text);
-            DialogResult = true;
+            try
+            {
+                _config.UpdateDefaultServerLocation(txtDefaultLocation.Text);
+                DialogResult = true;
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => Logger.Log(ex.Message, true));
+            }
         }
 
         private void btnReset_Click(object sender, RoutedEventArgs e)

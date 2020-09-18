@@ -21,22 +21,29 @@ namespace DeploymentApp
     {
         public static TextBlock LogsTextBlock;
         public static Configuration.Binding Config;
-        public readonly string _currentVersion = "1.1.0.6";
+        public readonly string _currentVersion = "1.1.0.7";
         public ServerProfile SelectedServerProfile { get; set; }
 
         public MainWindow()
         {
-            InitializeComponent();
-            Config = new Configuration.Binding();
-            ddlServerProfiles.BindComboBox(Config.Config.ServerProfiles, "ProfileName", "Id");
-            lblDeploymentLocation.Content = $@"\\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
-            lblVersion.Content = $"Current Version: {_currentVersion}";
-            AutoUpdater.ShowSkipButton = false;
-            AutoUpdater.InstalledVersion = new Version(_currentVersion);
-            AutoUpdater.MainIcon = Util.GetBitmapFromUrl("https://img.icons8.com/nolan/64/approve-and-update.png").Result;
-            AutoUpdater.SmallIcon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
-            AutoUpdater.DownloadImage = Util.GetBitmapFromUrl("https://img.icons8.com/fluent/48/000000/download.png").Result;
-            AutoUpdater.Start("https://mesh.imfast.io/autest.xml");
+            try
+            {
+                InitializeComponent();
+                Config = new Configuration.Binding();
+                ddlServerProfiles.BindComboBox(Config.Config.ServerProfiles, "ProfileName", "Id");
+                lblDeploymentLocation.Content = $@"\\{{SERVERNAME}}\{Config.Config.DefaultServerLocation}";
+                lblVersion.Content = $"Current Version: {_currentVersion}";
+                AutoUpdater.ShowSkipButton = false;
+                AutoUpdater.InstalledVersion = new Version(_currentVersion);
+                AutoUpdater.MainIcon = Util.GetBitmapFromUrl("https://img.icons8.com/nolan/64/approve-and-update.png").Result;
+                AutoUpdater.SmallIcon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+                AutoUpdater.DownloadImage = Util.GetBitmapFromUrl("https://img.icons8.com/fluent/48/000000/download.png").Result;
+                AutoUpdater.Start("https://mesh.imfast.io/autest.xml");
+            }
+            catch (Exception ex)
+            {
+                Task.Run(() => Logger.Log(ex.Message, true));
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
