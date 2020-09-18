@@ -1,13 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using DeploymentApp.Models;
 using System.Collections.ObjectModel;
-using System.Security.Cryptography.X509Certificates;
+using DeploymentApp.Helpers;
 
 namespace DeploymentApp.Configuration
 {
@@ -15,17 +13,21 @@ namespace DeploymentApp.Configuration
     {
         
         public Config Config;
-        private readonly string _appsettingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DeploymentApp", "appsettings.json");
+        private static readonly string deploymentAppFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DeploymentApp");
+        private readonly string _appsettingsFilePath;
         public Binding()
         {
-            if (!File.Exists(_appsettingsFilePath)) CreateSettingsFile();
-            var json = File.ReadAllText(_appsettingsFilePath);
+            Task.Run(() => AsyncIO.CreateDirectoryAsync(deploymentAppFolder)).GetAwaiter().GetResult();
+            var appsettingsFilePath = Path.Combine(deploymentAppFolder, "appsettings.json");
+            _appsettingsFilePath = appsettingsFilePath;
+            if (!File.Exists(appsettingsFilePath)) CreateSettingsFile(appsettingsFilePath);
+            var json = File.ReadAllText(appsettingsFilePath);
             Config = JsonConvert.DeserializeObject<Config>(json);
         }
 
-        private void CreateSettingsFile()
+        private void CreateSettingsFile(string settingsFilePath)
         {
-            var file = File.Create(_appsettingsFilePath);
+            var file = File.Create(settingsFilePath);
             file.Close(); // closing file to be able to write text to it.
             File.WriteAllText(file.Name, JsonConvert.SerializeObject(new Config
             {
