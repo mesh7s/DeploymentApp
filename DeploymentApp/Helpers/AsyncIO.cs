@@ -11,6 +11,10 @@ namespace DeploymentApp.Helpers
 {
     public static class AsyncIO
     {
+
+        const string appSettingsFileName = "appsettings.json";
+        const string appSettingsDevFileName = "appsettings.Development.json";
+
         public static Task<DirectoryInfo> CreateDirectoryAsync(string destDirName)
         {
             return Task.Run(() => Directory.CreateDirectory(destDirName));
@@ -29,8 +33,6 @@ namespace DeploymentApp.Helpers
             await DirectoryCopyAsync(folderToDeployPath, folderToDeployToPath, true);
             if (overwriteSettings == false)
             {
-                var appSettingsFileName = "appsettings.json";
-                var appSettingsDevFileName = "appsettings.Development.json";
                 var tempSettingsFile = Path.Combine("c:\\temp", folderToDeployTo.Name, appSettingsFileName);
                 var tempSettingsDevFile = Path.Combine("c:\\temp", folderToDeployTo.Name, appSettingsDevFileName);
                 var appSettingsFile = Path.Combine(folderToDeployTo.FullName, appSettingsFileName);
@@ -46,8 +48,6 @@ namespace DeploymentApp.Helpers
         {
             if (overwriteSettings == false)
             {
-                var appSettingsFileName = "appsettings.json";
-                var appSettingsDevFileName = "appsettings.Development.json";
                 var tempFolder = Path.Combine("c:\\temp", folderToDeployTo.Name);
                 await CreateDirectoryAsync(tempFolder);
                 var appSettingsFile = Path.Combine(folderToDeployTo.FullName, appSettingsFileName);
