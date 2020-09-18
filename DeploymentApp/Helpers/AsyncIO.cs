@@ -31,13 +31,14 @@ namespace DeploymentApp.Helpers
             {
                 var appSettingsFileName = "appsettings.json";
                 var appSettingsDevFileName = "appsettings.Development.json";
-                var tempFolder = Path.Combine("c:\\temp", folderToDeployTo.Name);
+                var tempSettingsFile = Path.Combine("c:\\temp", folderToDeployTo.Name, appSettingsFileName);
+                var tempSettingsDevFile = Path.Combine("c:\\temp", folderToDeployTo.Name, appSettingsDevFileName);
                 var appSettingsFile = Path.Combine(folderToDeployTo.FullName, appSettingsFileName);
                 var appSettingsDevFile = Path.Combine(folderToDeployTo.FullName, appSettingsDevFileName);
-                await CopyFileAsync(tempFolder, appSettingsFile, true);
-                await CopyFileAsync(tempFolder, appSettingsDevFile, true);
-                var tempDir = new DirectoryInfo(tempFolder);
-                await tempDir.DeleteAsync(false);
+                await CopyFileAsync(tempSettingsFile, appSettingsFile, true);
+                await CopyFileAsync(tempSettingsDevFile, appSettingsDevFile, true);
+                var tempDir = new DirectoryInfo(Path.Combine("c:\\temp", folderToDeployTo.Name));
+                await tempDir.DeleteAsync(true);
             }
         }
 
