@@ -15,7 +15,7 @@ namespace DeploymentApp.Configuration
     {
         
         public Config Config;
-        private readonly string _appsettingsFilePath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+        private readonly string _appsettingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "DeploymentApp", "appsettings.json");
         public Binding()
         {
             if (!File.Exists(_appsettingsFilePath)) CreateSettingsFile();
