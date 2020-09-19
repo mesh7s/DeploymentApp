@@ -3,6 +3,7 @@ using DeploymentApp.Models;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using static DeploymentApp.Enums;
 
 namespace DeploymentApp.Dialogs
@@ -38,13 +39,16 @@ namespace DeploymentApp.Dialogs
             {
                 if (string.IsNullOrWhiteSpace(txtWebAppName.Text) || string.IsNullOrWhiteSpace(txtFolderName.Text)) return;
 
-                if (_process == ManageProcess.Add)
-                    _config.AddWebApp(_serverId, new WebApp
+                if (_process == ManageProcess.Add) {
+                    var newWebApp = new WebApp
                     {
                         Id = Guid.NewGuid(),
                         Name = txtWebAppName.Text,
                         FolderName = txtFolderName.Text
-                    });
+                    };
+                    _config.AddWebApp(_serverId, newWebApp);
+                    ChangedWebApp = newWebApp;
+                }
                 else
                 {
                     _webAppForUpdate.Name = txtWebAppName.Text;
@@ -64,6 +68,12 @@ namespace DeploymentApp.Dialogs
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+        }
+
+        private new void GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.TextBox textBox && !textBox.IsReadOnly && e.KeyboardDevice.IsKeyDown(Key.Tab))
+                textBox.SelectAll();
         }
     }
 }

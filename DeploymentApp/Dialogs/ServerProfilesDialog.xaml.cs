@@ -15,6 +15,8 @@ namespace DeploymentApp.Dialogs
     {
         private readonly Configuration.Binding _config;
         public ServerProfile ChangedServer;
+        public ServerProfile NewServer;
+
         public ServerProfilesDialog()
         {
             InitializeComponent();
@@ -30,7 +32,10 @@ namespace DeploymentApp.Dialogs
             try
             {
                 var addServerDialog = new AddServerDialog(ManageProcess.Add);
-                addServerDialog.ShowDialog();
+                if (addServerDialog.ShowDialog() == true)
+                {
+                    NewServer = addServerDialog.ChangedProfile;
+                }
             }
             catch (Exception ex)
             {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using static DeploymentApp.Enums;
 
 namespace DeploymentApp.Dialogs
@@ -43,14 +44,18 @@ namespace DeploymentApp.Dialogs
                 if (string.IsNullOrWhiteSpace(txtProfileName.Text) || string.IsNullOrWhiteSpace(txtServerName1.Text)) return;
 
                 if (_process == ManageProcess.Add)
-                    _config.AddServerProfile(new ServerProfile
+                {
+                    var newProfile = new ServerProfile
                     {
                         Id = Guid.NewGuid(),
                         ProfileName = txtProfileName.Text,
                         FirstServerName = txtServerName1.Text,
                         SecondServerName = txtServerName2.Text,
                         Applications = new ObservableCollection<WebApp>()
-                    });
+                    };
+                    _config.AddServerProfile(newProfile);
+                    ChangedProfile = newProfile;
+                }
                 else
                 {
                     profileForUpdate.ProfileName = txtProfileName.Text;
@@ -66,6 +71,11 @@ namespace DeploymentApp.Dialogs
             {
                 Task.Run(() => Logger.Log(ex.Message, true));
             }
+        }
+        private new void GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (sender is System.Windows.Controls.TextBox textBox && !textBox.IsReadOnly && e.KeyboardDevice.IsKeyDown(Key.Tab))
+                textBox.SelectAll();
         }
     }
 }

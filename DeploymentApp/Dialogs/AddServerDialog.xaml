@@ -8,7 +8,7 @@
         Title="Add Server Profile" SizeToContent="WidthAndHeight" d:DesignWidth="306.002" Height="216"
         ResizeMode="CanMinimize">
     <Grid Margin="15,15,15,4">
-        <TextBox ToolTip="Enter a name for the profile"  Height="22" Margin="67,15,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtProfileName"/>
+        <TextBox ToolTip="Enter a name for the profile"  Height="22" Margin="67,15,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtProfileName" GotKeyboardFocus="GotKeyboardFocus"/>
         <TextBlock IsHitTestVisible="False" Text="Profile Name" VerticalAlignment="Top" Margin="103,18,57,0" Foreground="DarkGray">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
@@ -21,7 +21,7 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBox ToolTip="Enter server name (NOT IP)"  Height="22" Margin="67,42,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtServerName1"/>
+        <TextBox ToolTip="Enter server name (NOT IP)"  Height="22" Margin="67,42,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtServerName1" GotKeyboardFocus="GotKeyboardFocus"/>
         <TextBlock IsHitTestVisible="False" Text="First Server Name" VerticalAlignment="Top" Margin="89,45,66,0" Foreground="DarkGray">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
@@ -34,7 +34,7 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBox ToolTip="Enter server name (NOT IP)"  Height="22" Margin="67,71,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtServerName2"/>
+        <TextBox ToolTip="Enter server name (NOT IP)"  Height="22" Margin="67,71,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtServerName2" GotKeyboardFocus="GotKeyboardFocus"/>
         <TextBlock IsHitTestVisible="False" Text="Second Server Name" VerticalAlignment="Top" Margin="83,72,73,0" Foreground="DarkGray">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">

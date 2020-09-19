@@ -8,7 +8,7 @@
         Title="Add Web App" SizeToContent="WidthAndHeight" Height="185"
         ResizeMode="CanMinimize" Width="310">
     <Grid Margin="15,15,15,4">
-        <TextBox ToolTip="Enter a name for the web app"  Height="22" Margin="68,1,65,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtWebAppName"/>
+        <TextBox ToolTip="Enter a name for the web app"  Height="22" Margin="68,1,65,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtWebAppName" GotKeyboardFocus="GotKeyboardFocus"/>
         <TextBlock IsHitTestVisible="False" Text="Web App Name" VerticalAlignment="Top" Margin="94,4,66,0" Foreground="DarkGray">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
@@ -21,7 +21,7 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBox ToolTip="Enter folder name"  Height="22" Margin="67,37,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtFolderName"/>
+        <TextBox ToolTip="Enter folder name"  Height="22" Margin="67,37,66,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="143" x:Name="txtFolderName"  GotKeyboardFocus="GotKeyboardFocus"/>
         <TextBlock IsHitTestVisible="False" Text="Folder Name" VerticalAlignment="Top" Margin="106,40,49,0" Foreground="DarkGray">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">

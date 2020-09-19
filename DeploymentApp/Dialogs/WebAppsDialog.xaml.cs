@@ -17,6 +17,7 @@ namespace DeploymentApp.Dialogs
         private readonly Configuration.Binding _config;
         private readonly Guid _serverId;
         public WebApp ChangedWebApp;
+        public WebApp NewWebApp;
         public WebAppsDialog(Guid serverId)
         {
             InitializeComponent();
@@ -30,7 +31,9 @@ namespace DeploymentApp.Dialogs
 
         private void btnAddWebApp_Click(object sender, RoutedEventArgs e)
         {
-            new AddWebAppDialog(ManageProcess.Add, _serverId).ShowDialog();
+            var addWebAppDialog = new AddWebAppDialog(ManageProcess.Add, _serverId);
+            if (addWebAppDialog.ShowDialog() == true)
+                NewWebApp = addWebAppDialog.ChangedWebApp;
         }
 
         private void btnEditWebApp_Click(object sender, RoutedEventArgs e)

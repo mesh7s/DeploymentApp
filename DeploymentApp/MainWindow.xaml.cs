@@ -7,6 +7,7 @@ using DeploymentApp.Models;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -108,35 +109,52 @@ namespace DeploymentApp
         {
             var dialog = new ServerProfilesDialog();
             dialog.ShowDialog();
-            if (dialog.ChangedServer != null)
+            if (dialog.NewServer != null)
+            {
+                ddlServerProfiles.SelectedValue = dialog.NewServer.Id;
+                SetTextForProfile(dialog.NewServer.FirstServerName, dialog.NewServer.SecondServerName);
+            }
+            else if (dialog.ChangedServer != null)
             {
                 if (dialog.ChangedServer.Id == SelectedServerProfile.Id)
-                {
-                    if (string.Equals(dialog.ChangedServer.FirstServerName, Environment.MachineName, StringComparison.OrdinalIgnoreCase))
-                        txtServerName1.ModifyTextBox("c:", false);
-                    else
-                        txtServerName1.ModifyTextBox(dialog.ChangedServer.FirstServerName, true);
-
-                    if (string.Equals(dialog.ChangedServer.SecondServerName, Environment.MachineName, StringComparison.OrdinalIgnoreCase))
-                        txtServerName2.ModifyTextBox("c:", false);
-                    else
-                        txtServerName2.ModifyTextBox(dialog.ChangedServer.SecondServerName, true);
-                }
+                    SetTextForProfile(dialog.ChangedServer.FirstServerName, dialog.ChangedServer.SecondServerName);
             }
+        }
+
+        void SetTextForProfile(string firstServerName, string secondServerNAme)
+        {
+            if (string.Equals(firstServerName, Environment.MachineName, StringComparison.OrdinalIgnoreCase))
+                txtServerName1.ModifyTextBox("c:", false);
+            else
+                txtServerName1.ModifyTextBox(firstServerName, true);
+
+            if (string.Equals(secondServerNAme, Environment.MachineName, StringComparison.OrdinalIgnoreCase))
+                txtServerName2.ModifyTextBox("c:", false);
+            else
+                txtServerName2.ModifyTextBox(secondServerNAme, true);
         }
 
         private void btnEditWebApps_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new WebAppsDialog(SelectedServerProfile.Id);
             dialog.ShowDialog();
-            if (dialog.ChangedWebApp != null)
+            if (dialog.NewWebApp != null) 
+            {
+                ddlApplications.SelectedItem = dialog.NewWebApp;
+                SetTextForWebApp(dialog.NewWebApp.FolderName);
+
+            }
+            else if (dialog.ChangedWebApp != null)
             {
                 if (dialog.ChangedWebApp.Id == ((WebApp)ddlApplications.SelectedItem).Id)
-                {
-                    txtFolderName1.Text = dialog.ChangedWebApp.FolderName;
-                    txtFolderName2.Text = dialog.ChangedWebApp.FolderName;
-                }
+                    SetTextForWebApp(dialog.ChangedWebApp.FolderName);
             }
+        }
+
+        void SetTextForWebApp(string folderName)
+        {
+            txtFolderName1.Text = folderName;
+            txtFolderName2.Text = folderName;
         }
 
         private void ddlServerProfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
