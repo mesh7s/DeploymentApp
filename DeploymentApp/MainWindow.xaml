@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Deployment App" Height="611" Width="1163"
         Loaded="Window_Loaded"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Grid>
         <TextBox HorizontalAlignment="Left" Height="22" Margin="24,218,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="400" Name="txtFolderPath" Style="{StaticResource ResourceKey=flatTextBox}"/>
         <TextBlock IsHitTestVisible="False" Text="FOLDER TO DEPLOY" VerticalAlignment="Top" Margin="38,221,799,0" Foreground="DarkGray">

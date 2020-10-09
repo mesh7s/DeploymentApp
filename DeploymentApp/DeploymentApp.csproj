@@ -10,6 +10,11 @@
   <ItemGroup>
     <None Remove="Images\icons8-delete-bin-48.png" />
     <None Remove="Images\icons8-job-48.png" />
+    <None Remove="Images\rocket.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SplashScreen Include="Images\rocket.png" />
   </ItemGroup>
 
   <ItemGroup>
